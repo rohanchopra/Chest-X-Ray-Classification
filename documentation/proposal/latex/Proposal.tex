@@ -151,70 +151,12 @@ We plan to make use of the Google Colab platform to train our classifiers.
 In order to seamlessly collaborate and transfer changes from our local 
 system to the training system on Colab we will make use of git and Google Drive.
 \clearpage
-\begin{figure*}
-  \centering
+\begin{figure*}[!h]
+  \vspace{22.6cm}
+  \hspace{2cm}
   \begin{tikzpicture}
-\begin{ganttchart}[
-  canvas/.append style={fill=none, draw=black!5, line width=.75pt},
-  hgrid style/.style={draw=black!5, line width=.75pt},
-  vgrid={*1{draw=black!5, line width=.75pt}},
-  today=5,
-  today rule/.style={
-    draw=black!64,
-    dash pattern=on 3.5pt off 4.5pt,
-    line width=1.5pt
-  },
-  today label font=\small\bfseries,
-  title/.style={draw=none, fill=none},
-  title label font=\bfseries\footnotesize,
-  title label node/.append style={below=7pt},
-  include title in canvas=false,
-  bar label font=\mdseries\small\color{black!70},
-  bar label node/.append style={left=2cm},
-  bar/.append style={draw=none, fill=black!63},
-  bar incomplete/.append style={fill=barblue},
-  bar progress label font=\mdseries\footnotesize\color{black!70},
-  group incomplete/.append style={fill=groupblue},
-  group left shift=0,
-  group right shift=0,
-  group height=.5,
-  group peaks tip position=0,
-  group label node/.append style={left=.6cm},
-  group progress label font=\bfseries\small,
-  link/.style={-latex, line width=1.5pt, linkred},
-  link label font=\scriptsize\bfseries,
-  link label node/.append style={below left=-2pt and 0pt}
-  expand chart=\textwidth
-]{1}{13}
-\gantttitle[
-  title label node/.append style={below left=7pt and -3pt}
-]{WEEKS:\quad1}{1}
-\gantttitlelist{2,...,13}{1} \\
-\ganttgroup[progress=100]{1. Research}{1}{10} \\
-\ganttbar[
-  progress=100,
-  name=WBS1A
-]{\textbf{WBS 1.1} Finding \& Evaluating Data sets}{2}{5}\\
-\ganttbar[
-  progress=100,
-  name=WBS1B
-]{\textbf{WBS 1.2} Finding \& Evaluating models}{3}{5} \\
-[grid]
-\ganttgroup[progress=40]{2. Reporting}{4}{10} \\
-\ganttbar[progress=100]{\textbf{WBS 2.1} Writing Proposal}{5}{5} \\
-\ganttbar[progress=0]{\textbf{WBS 2.2} Writing Project Report}{10}{10} \\
-\ganttbar[progress=0]{\textbf{WBS 2.3} Writing Final Report}{12}{13}\\
-\ganttgroup[progress=0]{3. Development}{4}{10} \\
-\ganttbar[progress=0]{\textbf{WBS 3.1} Exploring and Preprocessing dataset}{6}{7} \\
-\ganttbar[progress=0]{\textbf{WBS 3.2} Developing Training Pipeline}{6}{7} \\
-\ganttbar[progress=0]{\textbf{WBS 3.3} Developing Evaluation Pipeline}{7}{8}\\
-\ganttbar[progress=0]{\textbf{WBS 3.4} Developing Model Explainablity pipeline}{7}{8}\\
-\ganttbar[progress=0]{\textbf{WBS 3.5} Creating Visualization for the report }{11}{12}\\
-\ganttgroup[progress=0]{4. Model Training \& Evaluation}{8}{10} \\
-\ganttbar[progress=0]{\textbf{WBS 4.1} Training Model}{9}{10} \\
-\ganttbar[progress=0]{\textbf{WBS 4.2} Evaluating Model}{10}{11} \\
-
-\end{ganttchart}
+    
+    \includegraphics[width=24cm,angle=90]{gantt_chart.png}
 \end{tikzpicture}
 \caption{Gantt Chart.}
 \end{figure*}
