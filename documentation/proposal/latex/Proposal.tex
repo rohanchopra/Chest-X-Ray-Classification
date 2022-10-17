@@ -5,9 +5,9 @@
 \documentclass[10pt,twocolumn,letterpaper]{article}
 
 %%%%%%%%% PAPER TYPE  - PLEASE UPDATE FOR FINAL VERSION
-%\usepackage[review]{cvpr}      % To produce the REVIEW version
+\usepackage[review]{cvpr}      % To produce the REVIEW version
 %\usepackage{cvpr}              % To produce the CAMERA-READY version
-\usepackage[pagenumbers]{cvpr} % To force page numbers, e.g. for an arXiv version
+%\usepackage[pagenumbers]{cvpr} % To force page numbers, e.g. for an arXiv version
 
 % Include other packages here, before hyperref.
 \usepackage{graphicx}
@@ -39,7 +39,7 @@
 \crefname{table}{Tab.}{Tabs.}
 
 
-\def\groupID{Team-Q}
+\def\groupID{Group-Q}
 \def\subjectNum{COMP6721}
 \def\subName{Applied Artificial Intelligence } 
 
@@ -56,9 +56,13 @@
 % \renewcommand\mddefault{mc}
 % \renewcommand\bfdefault{bc}
 
+%%%%%%%%% PAPER ID  - PLEASE UPDATE
+\def\cvprPaperID{Group-Q} % *** Enter the CVPR Paper ID here
+\def\confName{COMP6721}
+\def\confYear{2022}
 
 %%%%%%%%% TITLE - PLEASE UPDATE
-\title{Proposal for \subjectNum-\subName Project - Group Q}
+\title{Lung Disease Clasification - \subName Project}
 
 \author{Rohan Chopra\\
 \small 40233019\\
@@ -76,54 +80,61 @@ Abhishek Handa\\
 %%%%%%%%% BODY TEXT
 \section{Problem Statement and Application}
 \label{sec:intro}
-The destruction caused by COVID-19 has created a need for diagnosis 
-that is reliable, effective, and fast. Chest 
-X-ray acquisition is easy but needs to be evaluated by an expert 
-radiologist. We propose that a deep CNN model can help 
+The destruction caused by COVID-19 created a need for diagnosis 
+that is reliable and fast\cite{vandenberg2021considerations}. Chest 
+X-ray acquisition is easy but needs to be evaluated by expert 
+radiologists\cite{xrayread}. We propose that a deep CNN model can help 
 diagnose new diseases much 
-faster and accurately, so we plan to create models that will 
+faster and accurately. We plan to create models that will 
 classify multiple lung diseases like COVID-19 and 
 Atelectasis. This will allow us to reduce the turn-around-times 
-for diagnosis of new diseases considerably. 
+for diagnosis of new diseases. 
 There are a number of challenges that we foresee, the datasets 
 are highly imbalanced so we will have to take corrective measures. Images 
 from different X-Ray scanners have different radiographic contrast 
 \cite{andrew2022rad} this could have a negative impact on our model's results. 
-In some cases, multi-level classification might be required as the patient might 
-be affected by multiple diseases.
- 
 We will try different models to solve this problem and present a 
 detailed comparison of the results. After evaluating the results, 
 we will choose the best model in terms of both efficiency and 
-accuracy. We will try to make use of data augmentation and 
-transfer learning to tackle the small dataset problem and design 
-our custom CNN which could get us better results 
-than the existing architectures. 
+accuracy. 
+
+Our novelty will be producing an explainable model as well as 
+a custom CNN that we plan to create which could get us better 
+results than the existing architectures. We plan on releasing
+the best performing model, trained on all images to  
+serve as the base model for other problems.
 %-------------------------------------------------------------------------
 \section{Image Dataset Selection}
 \label{sec:dataset}
-We will use three chest X-Ray datasets with different diseases as listed in \cref*{tab:selDataset} to train and evaluate our models.
+We chose chest X-Ray datasets (\cref*{tab:selDataset}) that have varying disease types
+to ensure that our models are robust. The main concern while selecting the datasets
+was the number of images per class as most datasets were highly skewed. 
+We rejected datasets where the images were compressed and noisy as this can 
+lead to mis-diagnosis\cite{sivakumar2012computed}. 
+This will help reduce the time spent in the pre-processing stage.
+
 \begin{table}
   \centering
-  \begin{tabular}{p{1.6cm}|p{3.4cm}|wc{0.8cm}|p{1cm}}
+  \begin{tabular}{p{1.6cm}|p{3.2cm}|wc{0.8cm}|p{1cm}}
     \toprule
     Dataset & No. of Images & Classes & Image Size\\
     \midrule
-    Pneumonia \& COVID-19 \cite{covidchest} & 1,583 (Normal) + 576 (COVID-19) + 4,273 (Pneumonia) = \textbf{6,432} & 3 & Variable\\
+    Pneumonia, COVID-19 \cite{RAHMAN2021104319}\cite{9144185}\cite{kagglecovid} & 10,192 (Normal) + 3,616 (COVID-19) + 1,345 (Pneumonia) & 3 & 299 x 299\\
     \midrule
-    Pneumonia \cite{kermany2018labeled} \cite{kagglepneu} & 1,583 (Normal) + 1,493 (Viral Pneumonia) + 2,780 (Baterial Pneumonia)  = \textbf{5,856} & 3 & 224 x 224\\
+    Pneumonia \cite{kermany2018labeled} \cite{kagglepneu} & 1,583 (Normal) + 1,493 (Viral Pneumonia) + 2,780 (Baterial Pneumonia) & 3 & 224 x 224\\
     \midrule
-    Chest X-Ray8 \cite{wang2017chestx} \cite{kaggle8} & 60,190 (Normal) + 16,610 (Infiltration) + 8,284 (Atelectasis) = \textbf{85,084} & 3 & 1024 x 1024\\
+    Chest X-Ray8 \cite{wang2017chestx} \cite{kaggle8} & 60,190 (Normal) + 16,610 (Infiltration) + 8,284 (Atelectasis) & 3 & 1024 x 1024\\
     \bottomrule
   \end{tabular}
   \caption{Shortlisted Datasets.}
   \label{tab:selDataset}
 \end{table}
 \section{Possible Methodology}
+\label{sec:method}
 As our datasets are from different sources, we will explore different 
-pre-processing techniques like histogram equalization, Gaussian blur 
-\cite{gielczyk2022pre}, updating contrast and image flipping in PyTorch 
-using functions like normalize, gaussian\_blur and equalize \cite{transforms} 
+pre-processing techniques like histogram equalization and Gaussian blur 
+\cite{gielczyk2022pre} in PyTorch 
+using functions like normalize and gaussian\_blur\cite{transforms} 
 to make training easier for our CNN. We will explore several neural network architectures like VGG 16 \cite{simonyan2014very}, 
 Inception V3 \cite{szegedy2016rethinking}, Resnet \cite{he2016deep}, and produce our own Custom CNN model as well 
 with different depth, size of kernel, strides and types of layers. 
@@ -135,30 +146,35 @@ will try different learning rate decay methods. While training, we
 will tweak different hyperparameters like epoch, activation functions, 
 and batch size to ensure that we get a well performing model. As 
 the size of our dataset is small, we plan on experimenting with 
-techniques like data augmentation and transfer learning to improve 
-our results. To find the best hyperparameters, we will perform ablation 
+data augmentation using techniques like changing contrast and image flipping 
+as well as transfer learning to improve our results. 
+To find the best hyperparameters, we will perform ablation 
 studies and try to make use of Bayesian hyperparameter optimization 
 \cite{balandat2020botorch}. 
 
-Given that our datasets are highly imbalanced, we will not rely on 
-accuracy and will explore different metrics like confusion matrix, 
-ROC Curve and F-Measure \cite{fmeasure}. We will also consider the FLOPs of our models 
+Given that our datasets are highly imbalanced, we will try to use class weights and 
+data augmentation for minority class\cite{smote}.   
+For evaluation, we will explore different metrics like confusion matrix, 
+ROC Curve and F-Measure \cite{fmeasure}. 
+We will also consider the FLOPs of our models 
 as one of the key metrics. To explain the results of our models, 
 we plan on using SHAP \cite{NIPS2017_8a20a862} and GradCAM \cite{jacobgilpytorchcam} which will help us diagnose our 
 models and also help end users gain more confidence in our model's decisions.
-
-We plan to make use of the Google Colab platform to train our classifiers. 
-In order to seamlessly collaborate and transfer changes from our local 
-system to the training system on Colab we will make use of git and Google Drive.
 \clearpage
-\begin{figure*}[!h]
-  \vspace{22.6cm}
-  \hspace{2cm}
+\begin{figure*}
+  \vspace{14cm}
+  \hspace{0.75cm}
   \begin{tikzpicture}
-    
-    \includegraphics[width=24cm,angle=90]{gantt_chart.png}
+    \includegraphics[width=16cm]{gantt_chart.png}
 \end{tikzpicture}
-\caption{Gantt Chart.}
+\caption{The Gantt chart above portrays how our project will progress. 
+The deliverables have been mentioned as well. We will work 
+prarallely on different parts of the project as shown in the gantt chart. 
+Different team members will work on different tasks like building 
+the ML pipeline and building the data pre-processing pipeline at the same time. 
+After the deveopment and training is complete, we will take up 
+different sections of the final report and presentation to complete 
+it in time for the final submission on 04-12-22.}
 \end{figure*}
 
 \clearpage
