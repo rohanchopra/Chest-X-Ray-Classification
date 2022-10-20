@@ -12,7 +12,20 @@ Pre-processing functions to write
 - Change contrast of the image
 - Histogram equalization + gaussian blur (https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0265949)
 - Adaptive masking (https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0265949)
-- Other techniques used by kaggle users
+- Below are more optional pre-processing which can be done for better results (Source Kaggle https://www.kaggle.com/code/soumya9977/deep-dive-in-image-preprocessing-using-opencv)
+- Basic Geometric Transformations
+  - Image Translation
+  - Image Rotation
+  - Image Cropping
+- Color Space Correction
+  - RGB Color Space
+  - HSV Color Space
+  - HSL Color Space
+- Blurring and Smoothing
+  - Gaussian Blurring
+  - Median Blurring
+- Morphology (Smoothing edges https://prince-canuma.medium.com/image-pre-processing-c1aec0be3edf)
+- Remove Noise (Denoise)
 
 ### Model Explainability
 **Harman**
