@@ -9,4 +9,4 @@
  - Contrast change
  - Horizontal Flip
 
-#####Trying Contrast Limited Adaptive Histogram Equalization
+##### Trying Contrast Limited Adaptive Histogram Equalization
