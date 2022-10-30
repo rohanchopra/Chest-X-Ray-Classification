@@ -9,4 +9,6 @@
  - Contrast change
  - Horizontal Flip
 
-##### Trying Contrast Limited Adaptive Histogram Equalization
+## Task in progress
+
+ - Trying to do CLAHE (Contrast Limited Adaptive Histogram Equalization)
