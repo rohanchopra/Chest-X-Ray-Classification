@@ -13,18 +13,13 @@ drive.mount('/content/drive')
 
 import torch
 import torchvision.transforms as transforms
-import torchvision.datasets as datasets
-import torch.utils.data as td
 import numpy as np
 import matplotlib.pyplot as plt
 import torch.nn as nn
-import torch.nn.functional as F
-from matplotlib import image
-from matplotlib import pyplot
+
 import time
 
 import torchvision
-from torchvision.transforms.functional import normalize
 from torchvision.transforms.transforms import ToTensor
 from torchvision.transforms.transforms import Resize
 from torchvision.transforms.transforms import RandomHorizontalFlip
@@ -167,7 +162,7 @@ with torch.no_grad():
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
-    print('Test Accuracy of the model on the {} test images: {} %'
+    print('Validation Accuracy of the model on the {} test images: {} %'
           .format(total, (correct / total) * 100))
 
 model.eval()
