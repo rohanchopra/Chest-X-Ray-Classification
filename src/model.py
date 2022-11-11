@@ -19,6 +19,16 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=No
         num_ftrs = model_ft.fc.in_features
         model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = 232
+        
+    elif model_name == "resnet34":
+        """ 
+            Returns a Resnet 34 model.
+        """
+        model_ft = models.resnet34(weights=use_pretrained)
+        set_requires_grad(model_ft, feature_extract)
+        num_ftrs = model_ft.fc.in_features
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
+        input_size = 256
 
     elif model_name == "inceptionv3":
         """ 
