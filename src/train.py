@@ -1,13 +1,13 @@
 import time
 
-from torchmetrics import F1Score
+#from torchmetrics import F1Score
 import torch
 import torch.autograd.profiler as tprofiler
 import copy
-from sklearn.metrics import f1_score
+import numpy as np
 
 
-def train_model(model, dataloaders, optimizer, scheduler, criterion, 
+def train_model(device, model, dataloaders, optimizer, scheduler, criterion, 
                 num_epochs, num_classes, is_inception=False, profiler=False):
     start = time.time()
 
@@ -44,8 +44,8 @@ def train_model(model, dataloaders, optimizer, scheduler, criterion,
 
             i = 0
             
-            targets = []
-            outputs = []
+            targets_batch = []
+            outputs_batch = []
             
             # Iterate over data.
             for inputs, labels in dataloaders[phase]:
@@ -98,8 +98,8 @@ def train_model(model, dataloaders, optimizer, scheduler, criterion,
                     curr_acc = torch.sum(preds == labels.data)
                     running_corrects += curr_acc
                     
-                    outputs.append(preds)
-                    targets.append(labels.data)
+                    outputs_batch.append(preds)
+                    targets_batch.append(labels.data)
                                 
 
                 if (i) % 100 == 0:
@@ -118,11 +118,12 @@ def train_model(model, dataloaders, optimizer, scheduler, criterion,
                     best_acc = epoch_acc
                     best_model_wts = copy.deepcopy(model.state_dict())
                 if phase == 'val':
-                    
-                    outputs = np.concatenate(outputs)
-                    targets = np.concatenate(targets)
-                    val_outputs_history.append(outputs)
-                    val_targets_history.append(targets)
+                    outputs_batch = [i.cpu().detach().numpy() for i in outputs_batch]
+                    targets_batch = [i.cpu().detach().numpy() for i in targets_batch]
+                    outputs_batch = np.concatenate(outputs_batch)
+                    targets_batch = np.concatenate(targets_batch)
+                    val_outputs_history.append(outputs_batch)
+                    val_targets_history.append(targets_batch)
                     #f1 = f1_score(targets, outputs, average='macro')
                     #val_f1_history.append(f1)
                     
@@ -130,16 +131,18 @@ def train_model(model, dataloaders, optimizer, scheduler, criterion,
                     val_loss_history.append(epoch_loss)
                 elif phase == 'train':
                     
-                    outputs = np.concatenate(outputs)
-                    targets = np.concatenate(targets)
-                    train_outputs_history.append(outputs)
-                    train_targets_history.append(targets)
+                    outputs_batch = [i.cpu().detach().numpy() for i in outputs_batch]
+                    targets_batch = [i.cpu().detach().numpy() for i in targets_batch]
+                    outputs_batch = np.concatenate(outputs_batch)
+                    targets_batch = np.concatenate(targets_batch)
+                    train_outputs_history.append(outputs_batch)
+                    train_targets_history.append(targets_batch)
                     #f1 = f1_score(targets, outputs, average='macro')
                     #train_f1_history.append(f1)
                     
                     
-                    train_acc_history.append(epoch_acc)
-                    train_loss_history.append(epoch_loss)
+                    train_acc_history.append(epoch_acc.item())
+                    train_loss_history.append(epoch_loss.item())
 
         scheduler.step()
         print()
@@ -150,5 +153,5 @@ def train_model(model, dataloaders, optimizer, scheduler, criterion,
 
     # load best model weights to return
     model.load_state_dict(best_model_wts)
-    return model, prof, [val_acc_history, val_loss_history, val_targets_history, val_outputs_history], \
-           [train_acc_history, train_loss_history, train_targets_history, train_outputs_history]
+    return model, prof, {'acc': val_acc_history, 'loss': val_loss_history, 'targets': val_targets_history, 'outputs': val_outputs_history}, \
+           {'acc': train_acc_history, 'loss': train_loss_history, 'targets': train_targets_history, 'outputs': train_outputs_history}
