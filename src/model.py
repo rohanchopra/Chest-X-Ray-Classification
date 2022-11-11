@@ -5,7 +5,7 @@ import torch.nn as nn
 def abc():
     pass
 
-def initialize_model(model_name, num_classes, feature_extract, use_pretrained=True):
+def initialize_model(model_name, num_classes, feature_extract, use_pretrained=None):
     '''
     Initialize models for training.
     '''
