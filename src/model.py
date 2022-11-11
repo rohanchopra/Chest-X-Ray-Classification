@@ -2,8 +2,6 @@ from utils import set_requires_grad
 from torchvision import models
 import torch.nn as nn
 
-def abc():
-    pass
 
 def initialize_model(model_name, num_classes, feature_extract, use_pretrained=None):
     '''
