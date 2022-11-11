@@ -48,5 +48,5 @@ def eval_model(device, model, test_loader, is_inception):
     test_f1 = f1_score(targets_batch, outputs_batch, average='macro')
     test_cm = confusion_matrix(targets_batch, outputs_batch)
                      
-    return test_acc.item(), test_f1, test_cm, outputs_batch, targets_batch
+    return {'acc': test_acc.item(), 'f1': test_f1, 'cm': test_cm, 'outputs': outputs_batch, 'targets': targets_batch}
 
