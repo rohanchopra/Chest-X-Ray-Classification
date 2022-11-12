@@ -178,11 +178,4 @@ dependencies:
   - zipp=3.10.0=pyhd8ed1ab_0
   - zlib=1.2.11=h8d14728_1011
   - zstd=1.4.9=h6255e5f_0
-  - pip:
-    - pyqt5-sip==4.19.18
-    - pyqtchart==5.12
-    - pyqtwebengine==5.12.1
-    - torch==1.12.1+cu113
-    - torchaudio==0.12.1+cu113
-    - torchvision==0.13.1+cu113
 prefix: C:\Users\ro_chopr\.conda\envs\py39
