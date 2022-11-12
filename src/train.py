@@ -142,7 +142,7 @@ def train_model(device, model, dataloaders, optimizer, scheduler, criterion,
                     
                     
                     train_acc_history.append(epoch_acc.item())
-                    train_loss_history.append(epoch_loss.item())
+                    train_loss_history.append(epoch_loss)
 
         scheduler.step()
         print()
