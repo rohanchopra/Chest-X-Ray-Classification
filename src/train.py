@@ -95,6 +95,7 @@ def train_model(device, model, dataloaders, optimizer, scheduler, criterion,
                     # statistics
                     curr_loss = loss.item()
                     running_loss += curr_loss * inputs.size(0)
+                    
                     curr_acc = torch.sum(preds == labels.data)
                     running_corrects += curr_acc
                     
@@ -127,7 +128,7 @@ def train_model(device, model, dataloaders, optimizer, scheduler, criterion,
                     #f1 = f1_score(targets, outputs, average='macro')
                     #val_f1_history.append(f1)
                     
-                    val_acc_history.append(epoch_acc)
+                    val_acc_history.append(epoch_acc.item())
                     val_loss_history.append(epoch_loss)
                 elif phase == 'train':
                     
