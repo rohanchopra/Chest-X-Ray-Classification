@@ -8,6 +8,6 @@ def set_requires_grad(model, feature_extracting):
             param.requires_grad = False
             
             
-def save_model(model, name, path):
-    torch.save(model.state_dict(), os.path.join(path, name))
+def save_model(model, path, name):
+    torch.save(model, os.path.join(path, name))
     return True
