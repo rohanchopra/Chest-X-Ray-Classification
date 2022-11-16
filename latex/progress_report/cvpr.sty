@@ -489,12 +489,12 @@
    {
    \newpage
    \null
-   \iftoggle{cvprrebuttal}{\vspace*{-.3in}}{\vskip .375in}
+   \iftoggle{cvprrebuttal}{\vspace*{-.3in}}{\vskip .075in}
    \begin{center}
       % smaller title font only for rebuttal
       \iftoggle{cvprrebuttal}{{\large \bf \@title \par}}{{\Large \bf \@title \par}}
       % additional two empty lines at the end of the title
-      \iftoggle{cvprrebuttal}{\vspace*{-22pt}}{\vspace*{24pt}}
+      \iftoggle{cvprrebuttal}{\vspace*{-22pt}}{\vspace*{7pt}}
       {
       \large
       \lineskip .5em
@@ -503,9 +503,10 @@
           \@author
         }{
           \iftoggle{cvprrebuttal}{}{
-            Anonymous \confName~submission\\
-            \vspace*{1pt}\\
-            Paper ID \cvprPaperID
+            %Anonymous \confName~submission\\
+            %\vspace*{1pt}\\
+            %Paper ID 
+            \cvprPaperID
           }
         }
       \end{tabular}
@@ -514,7 +515,7 @@
       % additional small space at the end of the author name
       \vskip .5em
       % additional empty line at the end of the title block
-      \vspace*{12pt}
+      \vspace*{1pt}
    \end{center}
    }
 
