@@ -76,9 +76,9 @@ Abhishek Handa\\
 \section{Introduction and Problem Statement}
 \label{sec:intro}
 
-Early diagnosis of respiratory diseases like pneumonia and COVID-19 leads to decreased mortality rate \cite{daniel2016time} and is a powerful way to manage a pandemic\cite{xu2020facile}. These diseases can be diagnosed using a variety of tests like pulse oximetry, chest x-ray, CT scan\cite{mattsmith2022},  PCR\cite{akhtar1996pcr} however chest X-rays are by far the most accessible\cite{frija2021improve}. Furthermore, the scan is available in minutes making it one of the fastest ways of diagnosis\cite{healthwise2021}. However, the bottleneck with this method is the need for an expert radiologists to evaluate the scan\cite{mehrotra2009radiologists}. Many researchers have tried to solve this problem using deep learning \cite{wang2021deep} but haven't been able to come up with models that can replace radiologists. Small \cite{guefrechi2021deep} and highly imbalanced data \cite{wang2021deep}, along with varying specifications to X-ray scanners are the biggest problems \cite{melissarohman2018} that researchers have faced. Another issue with using deep neural networks in medical settings is its black-box nature\cite{paulblazek2022}, doctors and patients will not trust a model that cannot explain results\cite{aleksandra2019}. 
+Early diagnosis of respiratory diseases like pneumonia and COVID-19 leads to decreased mortality rate \cite{daniel2016time} and is a powerful way to manage a pandemic\cite{xu2020facile}. These diseases can be diagnosed using a variety of tests like pulse oximetry, chest x-ray, CT scan\cite{mattsmith2022},  PCR\cite{akhtar1996pcr} however chest X-rays are by far the most accessible\cite{frija2021improve}. Furthermore, the scan is available in minutes making it one of the fastest ways of diagnosis\cite{healthwise2021}. However, the bottleneck with this method is the need for an expert radiologists to evaluate the scan\cite{mehrotra2009radiologists}. Many researchers have tried to solve this problem using deep learning \cite{wang2021deep} but haven't been able to come up with models that can replace radiologists. Small \cite{guefrechi2021deep} and highly imbalanced data \cite{wang2021deep}, along with varying specifications of X-ray scanners are the biggest problems \cite{melissarohman2018} that researchers have faced. Another issue with using deep neural networks in medical settings is its black-box nature\cite{paulblazek2022}, doctors and patients will not trust a model that cannot explain its results\cite{aleksandra2019}. 
 
-This project is an attempt to compare three backbone architectures and lung disease datasets to identify the type of architecture that works best for lung disease classification. The small dataset problem and the issue of different radiographic contrast \cite{andrew2022rad} is mitigated using data augmentation. Imbalanced data will be handled with a combination of using class weights, and a good backbone model. A detailed comparison of results across architectures and datasets along with the explanation of model results will be provided. The final system will use the best model in terms of both efficiency and F1 score allowing rapid diagnosis of lung diseases leading to immediate initiation of treatment, reducing mortality rate.
+This project is an attempt to compare three backbone architectures and lung disease datasets to identify the type of architecture that works best for lung disease classification. The small dataset problem and the issue of different radiographic contrast \cite{andrew2022rad} is mitigated using data augmentation. Imbalanced data will be handled with a combination of using class weights, and a good backbone model. A detailed comparison of results across architectures and datasets along with an explanation of model results will be provided. The final system will use the best model in terms of both efficiency and F1 score allowing rapid diagnosis of lung diseases leading to immediate initiation of treatment, reducing mortality rate.
 %-------------------------------------------------------------------------
 \section{Proposed Methodologies}
 \label{sec:prop_method}
@@ -87,15 +87,15 @@ In this study, 12 models, four for each of the three datasets will be trained. T
   \centering
   \includegraphics[width=0.7\linewidth]{pre_proc_img.eps}  
    \caption{Effect of pre-processing on Chest X-ray images.}
-   \vspace{-1.5em}
+   \vspace{-1em}
    \label{fig:pre_proc_img}
 \end{figure}
-Before training, the images were pre-processed using histogram equalization and Gaussian blur with a 5x5 filter as Giełczyk \etal \cite{gielczyk2022pre} showed that this improved the F1 score by 4\% for chest X-ray classification. Visually, the contrast of the scan improved and allowed irregularities to stand out as shown in \cref*{fig:pre_proc_img}. Next, the scans were divided into train, validation and test with the 70:15:15 split. During training, images were augmented using RandomHorizontalFlip, RandomAdjustSharpness, and RandomAutocontrast in Pytorch \cite{transforms} to increase the number of images the model gets to learn from. To train the model, cosine annealing with warm restarts \cite{loshchilov2016sgdr} was used along with the Adam optimizer \cite{kingma2014adam} and the cross entropy loss function. 
+Before training, the images were pre-processed using histogram equalization and Gaussian blur with a 5x5 filter as Giełczyk \etal \cite{gielczyk2022pre} showed that this improved the F1 score by 4\% for chest X-ray classification. Visually, the contrast of the scan improved and allowed irregularities to stand out as shown in \cref{fig:pre_proc_img}. Next, the scans were divided into train, validation and test with the 70:15:15 split. During training, images were augmented using RandomHorizontalFlip, RandomAdjustSharpness, and RandomAutocontrast in Pytorch \cite{transforms} to increase the number of images the model gets to learn from. To train the model, cosine annealing with warm restarts \cite{loshchilov2016sgdr} was used along with the Adam optimizer \cite{kingma2014adam} and the cross entropy loss function. 
 \begin{figure}[t]
   \centering
   \includegraphics[width=1\linewidth]{samp_img.eps}  
    \caption{Sample images of Chest X-rays.}
-   \vspace{-1em}
+   \vspace{-0.5em}
    \label{fig:sample_img}
 \end{figure}
 
@@ -113,13 +113,15 @@ Before training, the images were pre-processed using histogram equalization and 
     \bottomrule
   \end{tabular}
   \caption{Shortlisted Datasets.}
+  \vspace{-1.5em}
   \label{tab:selDataset}
 \end{table}
-\textbf{Datasets:} (\cref*{tab:selDataset}) with varying disease types were chosen to ensure model robustness. Other criteria included the \textit{number of images per class} and \textit{image quality} as noisy scans can lead to mis-diagnosis\cite{sivakumar2012computed}. 
-The \textbf{COVID} dataset was created using 43 \cite{covidpneumonia2020data} different publications. \cite{RAHMAN2021104319,9144185,kagglecovid} X-rays with widespread, hazy, and irregular ground glass opacities are of the COVID-19 class \cite{jacobi2020portable}. Whereas, the ones with haziness in the lower regions only \cite{zhan2021clinical} are viral pneumonia cases as shown in \cref*{fig:sample_img}.
+\textbf{Datasets:} (\cref{tab:selDataset}) with varying disease types were chosen to ensure model robustness. Other criteria included the \textit{number of images per class} and \textit{image quality} as noisy scans can lead to mis-diagnosis\cite{sivakumar2012computed}. 
+The \textbf{COVID} dataset was created using 43 \cite{covidpneumonia2020data} different publications. \cite{RAHMAN2021104319,9144185,kagglecovid} X-rays with widespread, hazy, and irregular ground glass opacities are of the COVID-19 class \cite{jacobi2020portable}. Whereas, the ones with haziness only in the lower regions \cite{zhan2021clinical} are viral pneumonia cases as shown in \cref{fig:sample_img}.
 The \textbf{Pneumonia}, dataset contains scans from pediatric patients. \cite{kermany2018labeled,kagglepneu} Scans with one white condensed area affecting only one side of the lungs are tagged bacterial pneumonia\cite{areviral}. X-rays which show bilateral patchy areas of consolidation are classified as viral pneumonia\cite{guo2012radiological}. 
 \textbf{Chest X-ray 8} dataset was released by NIH \cite{chestxray2017data} with over 100k chest X-ray images and their radiological reports which Wang \etal \cite{wang2017chestx} used to create disease labels through NLP. \cite{kaggle8} It contains 15 classes but only 7 were chosen for this study. Furthermore, normal class images were undersampled to choose only one scan per patient. 
-\textbf{Backbone Architectures:} (\cref*{tab:selArch}) of various configuration and blocks were chosen. Other selection criteria were the \textit{number of trainable parameters}, important as total training time and hardware resources are limited for this project and the \textit{top 5 classification accuracy} on the ImageNet 1K benchmark dataset.
+
+\textbf{Backbone Architectures:} (\cref{tab:selArch}) of various configuration and blocks were chosen. Other selection criteria were the \textit{number of trainable parameters}, important as total training time and hardware resources are limited for this project and the \textit{top 5 classification accuracy} on the ImageNet 1K benchmark dataset.
 \begin{table}
   \centering
   \begin{tabular}{p{1.7cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}}
@@ -134,7 +136,7 @@ The \textbf{Pneumonia}, dataset contains scans from pediatric patients. \cite{ke
   \bottomrule
   \end{tabular}
   \caption{Shortlisted Backbone Architectures.}
-  \vspace{-1em}
+  \vspace{-1.5em}
   \label{tab:selArch}
 \end{table}
 \textbf{ResNet 34}: residual learning network with 34 layers that are made possible by skip connections. The 34 layer variant was chosen to decrease training time. \cite{he2016deep}
@@ -151,14 +153,14 @@ Nine models were trained from scratch and the training, validation F1 score and 
   \centering
   \includegraphics[width=1\linewidth]{f1_loss_separate.eps}  
    \caption{Train \& Val F1 \& Loss plots for the 9 models.}
-   \vspace{-1.5em}
+   \vspace{-1em}
    \label{fig:acc_loss_sep}
 \end{figure}
 
 %-------------------------------------------------------------------------
 \section{Future Improvement}
 \label{sec:future}
-The model with best validation loss is being saved to evaluate the test set but, going forward, the models will be trained for 50 epochs to save time as all the models start to overfit after that point. One model for each dataset will be trained using transfer learning and its performance will be compared with models trained from scratch. Ablation study will be performed to see how different hyperparameters affect the F1 score of the models. Class weights will be explored to improve model performance and a confusion matrix of the test set will be produced to understand model mis-classifications. Further, t-SNE \cite{van2008visualizing} and grad-CAM \cite{jacobgilpytorchcam} will be used to visualize the trained models.
+The model with best validation loss is being saved to evaluate the test set but, going forward, the models will be trained for 50 epochs to save time as all the models start to overfit after that point. Class weights will be explored to improve model performance and a confusion matrix of the test set will be produced to understand model mis-classifications. One model for each dataset will be trained using transfer learning and its performance will be compared with models trained from scratch. Ablation study will be performed to see how different hyperparameters affect the F1 score of the models. Finally, t-SNE \cite{van2008visualizing} and grad-CAM \cite{jacobgilpytorchcam} will be used to visualize the trained models.
 
 %%%%%%%%% REFERENCES
 \clearpage
