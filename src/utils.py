@@ -11,3 +11,19 @@ def set_requires_grad(model, feature_extracting):
 def save_model(model, path, name):
     torch.save(model, os.path.join(path, name))
     return True
+
+
+def encode_label(label, classes_list=classes): #encoding the classes into a tensor of shape (11) with 0 and 1s.
+    target = torch.zeros(len(classes))
+    for l in label:
+        idx = classes_list.index(l)
+        target[idx] = 1
+    return target
+
+
+def decode_target(target, threshold=0.5): #decoding the prediction tensors of 0s and 1s into text form
+    result = []
+    for i, x in enumerate(target):
+        if (x >= threshold):
+            result.append(classes[i])     
+    return ' '.join(result)
