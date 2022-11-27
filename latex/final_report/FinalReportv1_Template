@@ -1,0 +1,181 @@
+1. [Abstract]
+Articulate on the abstract presentation of the project and what to expect by reading your report in full detail. Briefly discuss the problem, proposed methods and used data, and the achieved results. [maximum of 150 words] 
+
+2. Introduction [the abstract & introduction should be no longer than 1.5 pages].
+a) Write a section to cover the problem statement and its importance to the application field. What are the associated challenges with respect to the problem? How have these challenges been addressed in the literature? What are the pros/cons of the existing solutions? How is this report trying to solve the problem and a challenge in mind? Elaborate on the high-level abstract explanation of your methodology and what kind of implementations you have done. What kind of results are you obtaining? 
+b) Related works. Write a subsection to cover literature review and related work descriptions.
+Min 4 pages. For every paper search for pros & cons, their methodology, their results and their hindrances. 
+
+3. Methodology [this section should be no longer than 2 pages]. 
+The methodology section should cover several subsections as follows 
+a) Datasets. A comprehensive description of the datasets, including where and (how) there were collected, a complete statistical details, distribution and analysis of the datasets such as size of the data, number of images, number of classes, and any preprocessing and filtering steps you have taken to make it ready to be fed to your deep neural network pipeline. Provide image examples of the datasets and articulate on the complexity of their class representations. Explain your train/validation/test breakdown, cross-fold validations, resolution level for training, etc. 
+b) CNN Models. Describe the architecture of the selected CNN models for the chosen image classification task. Elaborate on why you think the selected models are suitable for your practice. Describe the computational complexities of the selected models for training and validation phases in terms of wall clock time for one-epoch training as well as number of FLOPS calculations. How does the selected model compare to other available models in terms of computational complexity, accuracy, suitability, etc. 
+c) Optimization Algorithm. Discuss how you validated and optimized your model. What optimization algorithm(s) are you choosing to train the CNN model? What metric evaluations are considered for reporting the performance of the optimization algorithm. Describe the properties of the algorithm and its associated hyperparameters for training
+Adam explanation for 3-4 lines and and their formulas for Adam(paper wala), cosine annealing ke baare mai, why learning rate scheduler and what does cosine annealing do and the formula for the same the metrics we are using (f1 score, precision and recall) formulas in latex format
+4. Results [this section should be no longer than 2.5 pages].
+This section describes and analyses the experimental design and obtained results in detail. More specifically
+a) Experiment Setup. You need to describe how you set up your experiments, optimised and validated your models, and the performance of your models using appropriate metrics (precision, recall, F1-measure, …). Explain the ranges of hyper-parameters and rationale behind selecting as such in relation to your data and models.
+
+describe how you set up your experiments, optimised and validated your models
+
+Pytorch framework along with Python 3.8 programming language was used locally on NVIDIA GeForce RTX 3060 Ti with 8GB RAM to set up the training,testing and validation pipeline for the three different datasets.Standard 70:15:15 train, validation and test split was done across all the 3 datasets(https://thaddeus-segura.com/train-test-split/).
+
+Complete pipeline was divided into different steps like Preprocessing phase, Data Augmentation Phase, Model Training phase, Model Validation phase, Hyperparameter Tuning phase and Model Visualization Phase.
+
+Preprocessing -: Prior to training, images were preprocessed with using histogram equalisation and gaussian blur with a 5x5 filter as (Citation: Giełczyk A, Marciniak A, Tarczewska M, Lutowski Z (2022) Pre-processing methods in chest X-ray image classification. PLoS ONE 17(4): e0265949. https://doi.org/10.1371/journal.pone.0265949) showed an increase of 4% observed on Chest X-ray classification.
+Data Augmentation -: During training, images were augmented using RandomHorizontalFlip, RandomAdjustSharpness, and RandomAutocontrast in Pytorch (https://pytorch.org/vision/stable/transforms.html)
+to increase the number of images the model learns from.
+Model Training -: To train the model, cosine annealing LR (https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.CosineAnnealingLR.html) was used along with the Adam optimizer (https://arxiv.org/pdf/1412.6980.pdf) along with cross entropy loss function.
+Model Validation -: To test the model, we used validation set and test set and computed the loss, accuracy, precision, F-measure for all the backbone models and in all the datasets.
+Hyperparameter Tuning -: Learning rate(alpha) was tuned for different values of alpha 0.1, 0.01, 0.05, 0.001,0.005 
+Model Visualisation -: 
+
+
+Pneumonia dataset
+
+
+
+
+accuracy
+precision
+recall
+F1-measure
+Resnet34
+
+
+
+
+
+
+
+
+MobileNet V3 large
+
+
+
+
+
+
+
+
+EfficientNet V0
+
+
+
+
+
+
+
+
+
+
+Covid19 dataset
+
+
+
+Accuracy
+precision
+recall
+F1-measure
+Resnet34
+
+
+
+
+
+
+
+
+MobileNet V3 large
+
+
+
+
+
+
+
+
+EfficientNet V0
+
+
+
+
+
+
+
+
+
+
+ChestXray8 dataset
+
+
+
+Accuracy
+precision
+recall
+F1-measure
+Resnet34
+
+
+
+
+
+
+
+
+MobileNet V3 large
+
+
+
+
+
+
+
+
+EfficientNet V0
+
+
+
+
+
+
+
+
+
+
+
+Hyper Parameters chosen
+Learning rate-: Tried different values 0.1, 0.01, 0.05, 0.001, 0.005 (Results plot attached)
+
+Batch size-: 32 
+(https://wandb.ai/ayush-thakur/dl-question-bank/reports/What-s-the-Optimal-Batch-Size-to-Train-a-Neural-Network---VmlldzoyMDkyNDU)
+
+Optimizer used (Adam)  -: Beta1=0.9 Beta2=0.999 (https://arxiv.org/pdf/1412.6980.pdf)
+
+Num of Hidden Units -: (Same as in Backbone models used)
+
+Num of Layers -: (Same as in Backbone models used)
+
+Activation function -: (Same as in Backbone models used)
+
+Number of Epochs-: 100 (allocated resources limitation)
+
+Dropout Probability-: 
+
+
+
+b) Main Results. Demonstrate the main results in figure/table formatting and analyse the performance of your trained models, as well as comparison with other available results.
+
+
+c) Ablative Study. Demonstrate the ablation results from tweaking different hyper-parameters such as number of classes for training, number of images per class training, different range of learning rates, different range of batch-size, etc, and explain your observations.
+
+
+
+5. References [this section lists all references on the sixth page of your report]:
+
+
+6. Cite any references you used in the projects, including any source code and dataset you have used in the project. Please note that failure to properly cite your references constitutes plagiarism and will be deemed for reporting.
+
+
+
+7. Supplementary Material [this section is appended to the main report draft]: You may include appendices to your final report to support different sections of the main draft. **Note: this section will not be considered for marking. Furthermore, reviewing this section for all lecturers and TAs is not mandatory. 
