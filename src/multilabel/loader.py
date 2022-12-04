@@ -1,5 +1,7 @@
 import torch
-
+from torch.utils.data import Dataset
+from PIL import Image
+import os
 
 class MultiLabelDataset(Dataset):
     def __init__(self, root, dataframe, transform = None):
@@ -8,6 +10,7 @@ class MultiLabelDataset(Dataset):
         self.transform = transform
         self.file_names = dataframe.index
         self.labels = dataframe.values.tolist()
+        self.classes = list(dataframe.columns)
         
     def __len__(self):
         return len(self.dataframe)
@@ -18,4 +21,4 @@ class MultiLabelDataset(Dataset):
         if self.transform:
             image = self.transform(image)
         
-    return image, torch.tensor(label, dtype=torch.float)
+        return image, torch.tensor(label, dtype=torch.float)
