@@ -1,0 +1,19 @@
+\begin{table*}[tbh]
+\centering
+\boldmath
+\scalebox{0.8}{%
+\begin{tabular}{|l|ccc|ccc|ccc|ccc|} \hline
+ Model & \multicolumn{3}{|c|}{ResNet} & \multicolumn{3}{|c|}{MobileNet} & \multicolumn{3}{|c|}{EfficientNet} & \multicolumn{3}{|c|}{Transfer Learning} \\
+\cline{1-13}
+ Dataset & F1 & Time & Epoch & F1 & Time & Epoch & F1 & Time & Epoch & F1 & Time & Epoch  \\
+ \hline
+\emph{Pneumonia}           & 0.784 & 82.02 &  \textbf{22} &   \textbf{0.804} & \textbf{75.49} &  42 &   0.768 & 110.06 &  44 &   0.782 & 114.07 &  70  \\
+\hline
+\emph{COVID}        & 0.963 & 67.64 & 71 & 0.959 & \textbf{45.90} & 82 & 0.970 & 79.75 & 89 & \textbf{0.978} & 56.46 & \textbf{46}   \\ % \hdashline
+\hline
+\emph{ChestXray8} &   &  &  &  &  &  &  &  &  &  &  &   \\ \hline
+\end{tabular}
+}
+\caption{{\pred conducts}({\it material},{\it energy}) table: IKE helps the user discover substantially more patterns than the manual method (41 vs. 5), with similar precision and in less time, resulting in the overall highest yield. Fully automatic bootstrapping produced a large number of low precision patterns and overall lower yield than IKE.}
+\label{table:conducts}
+\end{table*}
