@@ -29,18 +29,18 @@ def load_data(path, batch_size, input_size, norm_arr,
                             T.Normalize(*norm_arr)])
                         }
     
-    train = pd.read_csv(os.path.join(path, "train.csv")).drop(['Image Index', 'Patient ID'], axis=1).set_index('FilePath')
-    test = pd.read_csv(os.path.join(path, "test.csv")).drop(['Image Index', 'Patient ID'], axis=1).set_index('FilePath')
-    val = pd.read_csv(os.path.join(path, "val.csv")).drop(['Image Index', 'Patient ID'], axis=1).set_index('FilePath')
+    train = pd.read_csv(os.path.join(path, "train.csv")).drop(['FilePath', 'Patient ID'], axis=1).set_index('Image Index')
+    test = pd.read_csv(os.path.join(path, "test.csv")).drop(['FilePath', 'Patient ID'], axis=1).set_index('Image Index')
+    val = pd.read_csv(os.path.join(path, "val.csv")).drop(['FilePath', 'Patient ID'], axis=1).set_index('Image Index')
     
     train_dataset = MultiLabelDataset(root=os.path.join(path, "train"),
                                          dataframe=train,
                                          transform=transform_dict["train"])
     val_dataset = MultiLabelDataset(root=os.path.join(path, "val"),
-                                       dataframe=train,
+                                       dataframe=val,
                                        transform=transform_dict["test_val"])
     test_dataset = MultiLabelDataset(root=os.path.join(path, "test"),
-                                        dataframe=train,
+                                        dataframe=test,
                                         transform=transform_dict["test_val"])
     
     data_loader_train = td.DataLoader(train_dataset,
