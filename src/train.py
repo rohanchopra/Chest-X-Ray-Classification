@@ -101,10 +101,9 @@ def train_model(device, model, dataloaders, optimizer, scheduler, criterion,
                     
                     outputs_batch.append(preds)
                     targets_batch.append(labels.data)
-                                
 
                 if (i) % 100 == 0:
-                    print(f'Epoch [{epoch + 1}/{num_epochs}], Step [{i}/{total_steps}], Loss: {curr_loss:.4f}, Accuracy: {curr_acc:.2f}%')
+                    print(f'Epoch [{epoch + 1}/{num_epochs}], Step [{i}/{total_steps}], Loss: {curr_loss:.4f}, Accuracy: {curr_acc/preds.shape[0]:.2f}%')
 
             with torch.no_grad():
                 epoch_loss = running_loss / len(dataloaders[phase].dataset)
