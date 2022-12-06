@@ -159,6 +159,26 @@ The \textbf{Pneumonia}, dataset contains scans from pediatric patients. \cite{ke
 Two datasets in this study had a very small number of samples which caused the models to overfit early. To mitigate this, random contrast and sharpness adjustment \cite{nanni2021comparison} data augmentation techniques were used. Some scans in the datasets were anterior-posterior while some others were posterior-anterior and using the horizontal flip data augmentation would make the model invariant to these differences\cite{botev2022regularising}.
 Inception was the first model trained and each epoch took over 1 hour. To reduce the training time, the X-ray images were resized, pre-processed and split into train, test and validation sets separately. Furthermore, EfficientNet, MobileNet and ResNet 34 were chosen as they have a considerably low number of learnable parameters. Now each epoch is taking less than 4 minutes. 
 
+\begin{table*}[tbh]
+  \centering
+  \boldmath
+  \scalebox{0.9}{%
+  \begin{tabular}{l|ccc|ccc|ccc|ccc} \hline
+    Model & \multicolumn{3}{c|}{\textbf{ResNet}} & \multicolumn{3}{c|}{\textbf{MobileNet}} & \multicolumn{3}{c|}{\textbf{EfficientNet}} & \multicolumn{3}{c}{\textbf{EN - Transfer Learning}} \\
+  \cline{1-13}
+  Dataset & \emph{F1} & \emph{Time} & \emph{Epoch} & \emph{F1} & \emph{Time} & \emph{Epoch} & \emph{F1} & \emph{Time} & \emph{Epoch} & \emph{F1} & \emph{Time} & \emph{Epoch}  \\
+   \hline
+  \emph{Pneumonia}           & 0.784 & 82.02 &  \textbf{22} &   \textbf{0.804} & \textbf{75.49} &  42 &   0.768 & 110.06 &  44 &   0.782 & 114.07 &  70  \\
+  \hline
+  \emph{COVID}        & 0.963 & 67.64 & 71 & 0.959 & \textbf{45.90} & 82 & 0.970 & 79.75 & 89 & \textbf{0.978} & 56.46 & \textbf{46}   \\ % \hdashline
+  \hline
+  \emph{X-Ray 8} &   &  &  &  &  &  &  &  &  &  &  &   \\ \hline
+  \end{tabular}
+  }
+  \caption{Model Metrics}
+  \label{table:conducts}
+  \end{table*}
+
 Nine models were trained from scratch and the training, validation F1 score and loss can be seen in \cref{fig:acc_loss_sep}. From the plots it is clear that going from a smaller architecture to a bigger architecture, makes the model start to overfit earlier. Another interesting observation is that cosine annealing impacted the loss of MobileNet the most every 10 epochs due to warm restarts. From the graphs it can be seen that all three datasets had similar performance across models when trained for a high number of epochs. The X-ray 8 dataset performed the worst among the three datasets which could be due to the high number of classes as compared to the other datasets. Surprisingly, the pneumonia dataset performed worse than the COVID + pneumonia dataset which indicates that COVID cases are easier to distinguish from pneumonia cases. 
 
 \begin{figure}[t]
@@ -169,6 +189,22 @@ Nine models were trained from scratch and the training, validation F1 score and 
    \label{fig:acc_loss_sep}
 \end{figure}
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=1\linewidth]{tl_f1_loss.eps}  
+   \caption{Train \& Val, F1 \& Loss plots for EfficientNet trained from scratch and with ImageNet weights.}
+   \vspace{-1em}
+   \label{fig:tl_acc_loss}
+\end{figure}
+
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=1\linewidth]{ablation.eps}  
+   \caption{Ablative Study F1 scores.}
+   \vspace{-1em}
+   \label{fig:ablation}
+\end{figure}
 
 %%%%%%%%% REFERENCES
 \clearpage
