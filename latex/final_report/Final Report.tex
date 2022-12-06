@@ -75,24 +75,57 @@ Abhishek Handa\\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-  The ABSTRACT is to be in fully justified italicized text, at the top of the left-hand column, below the author and affiliation information.
-  Use the word ``Abstract'' as the title, in 12-point Times, boldface type, centered relative to the column, initially capitalized.
+  The ABSTRACT is to be in fully justified italicized text, at the top of the left-hand column, 
+  below the author and affiliation information.
+  Use the word ``Abstract'' as the title, in 12-point Times, boldface type, centered relative 
+  to the column, initially capitalized.
   The abstract is to be in 10-point, single-spaced type.
   Leave two blank lines after the Abstract, then begin the main text.
   Look at previous CVPR abstracts to get a feel for style and length.
+  Look at previous CVPR abstracts to get a feel for style and length.
+  Look at previous CVPR abstracts to get a feel for style and length.
+  Look at previous CVPR abstracts to get a feel for style and length.
+  Look at previous CVPR abstracts to get a feel for style and length.
+  Look at previous CVPR abstracts to get a feel for style and length.
+  Look at previous CVPR abstracts.
 \end{abstract}
 
 %%%%%%%%% BODY TEXT
-\section{Introduction}
+\section{Introduction-1.5}
 \label{sec:intro}
 
-Early diagnosis of respiratory diseases like pneumonia and COVID-19 leads to decreased mortality rate \cite{daniel2016time} and is a powerful way to manage a pandemic\cite{xu2020facile}. These diseases can be diagnosed using a variety of tests like pulse oximetry, chest x-ray, CT scan\cite{mattsmith2022},  PCR\cite{akhtar1996pcr} however chest X-rays are by far the most accessible\cite{frija2021improve}. Furthermore, the scan is available in minutes making it one of the fastest ways of diagnosis\cite{healthwise2021}. However, the bottleneck with this method is the need for an expert radiologists to evaluate the scan\cite{mehrotra2009radiologists}. Many researchers have tried to solve this problem using deep learning \cite{wang2021deep} but haven't been able to come up with models that can replace radiologists. Small \cite{guefrechi2021deep} and highly imbalanced data \cite{wang2021deep}, along with varying specifications of X-ray scanners are the biggest problems \cite{melissarohman2018} that researchers have faced. Another issue with using deep neural networks in medical settings is its black-box nature\cite{paulblazek2022}, doctors and patients will not trust a model that cannot explain its results\cite{aleksandra2019}. 
+Early diagnosis of respiratory diseases like pneumonia and COVID-19 leads to decreased mortality 
+rate \cite{daniel2016time} and is a powerful way to manage a pandemic\cite{xu2020facile}. 
+These diseases can be diagnosed using a variety of tests like pulse oximetry, chest x-ray, 
+CT scan\cite{mattsmith2022},  PCR\cite{akhtar1996pcr} however chest X-rays are by far the most 
+accessible\cite{frija2021improve}. Furthermore, the scan is available in minutes making it one 
+of the fastest ways of diagnosis\cite{healthwise2021}. However, the bottleneck with this method 
+is the need for an expert radiologists to evaluate the scan\cite{mehrotra2009radiologists}. 
+Many researchers have tried to solve this problem using deep learning \cite{wang2021deep} but 
+haven't been able to come up with models that can replace radiologists. Small 
+\cite{guefrechi2021deep} and highly imbalanced data \cite{wang2021deep}, along with varying 
+specifications of X-ray scanners are the biggest problems \cite{melissarohman2018} that 
+researchers have faced. Another issue with using deep neural networks in medical settings is 
+its black-box nature\cite{paulblazek2022}, doctors and patients will not trust a model that 
+cannot explain its results\cite{aleksandra2019}. 
 
-This project is an attempt to compare three backbone architectures and lung disease datasets to identify the type of architecture that works best for lung disease classification. The small dataset problem and the issue of different radiographic contrast \cite{andrew2022rad} is mitigated using data augmentation. Imbalanced data will be handled with a combination of using class weights, and a good backbone model. A detailed comparison of results across architectures and datasets along with an explanation of model results will be provided. The final system will use the best model in terms of both efficiency and F1 score allowing rapid diagnosis of lung diseases leading to immediate initiation of treatment, reducing mortality rate.
+This project is an attempt to compare three backbone architectures namely, ResNet-34, 
+MobileNet V3 Large and EfficientNet B1 along with three lung disease datasets 
+to identify the type of architecture that works best for lung disease classification. The 
+small dataset problem and the issue of different radiographic contrast \cite{andrew2022rad} 
+is mitigated using data augmentation. Imbalanced data problem is handled by undersampling the 
+majority class. F1 scores and loss have been used to compare models and select the
+best overall model. This model has then been used to perform transfer learning and evaluate
+the improvement over the models trained from scratch. Further, an ablation study was 
+performed on the best model to find the best learning rate. Finally, GradCAM and T-SNE 
+were used to visualize models and understand model predictions better. 
 
 \textbf{Related Works:} Test 
+
+
+
 %-------------------------------------------------------------------------
-\section{Methodology}
+\section{Methodology-2}
 \label{sec:prop_method}
 In this study, 12 models, four for each of the three datasets will be trained. The first three models will be trained from scratch and the fourth model will be trained using transfer learning. The hyperparameters will be fixed across models to produce comparable results. Next, hyperparameters will be tuned to find the best model. Finally, the models will be visualized using t-SNE and Grad-CAM \cite{jacobgilpytorchcam} to explain model results. 
 \begin{figure}[t]
@@ -121,7 +154,7 @@ Before training, the images were pre-processed using histogram equalization and 
     \midrule
     Pneumonia\cite{kermany2018labeled,kagglepneu} & 3k:1.5k:1.5k & 3 & 224\textsuperscript{2}\\
     \midrule
-    Chest X-Ray8\cite{wang2017chestx,kaggle8} & 25k:12k:6k:5k :3k:2.7k:2.6k & 7 & 1024\textsuperscript{2}\\
+    Chest X-Ray8\cite{wang2017chestx,kaggle8} & 7.2k:7k:7k:4.1k :3.9k:3.5k:2.9k & 7 & 1024\textsuperscript{2}\\
     \bottomrule
   \end{tabular}
   \caption{Shortlisted Datasets.}
@@ -154,7 +187,7 @@ The \textbf{Pneumonia}, dataset contains scans from pediatric patients. \cite{ke
 \textbf{ResNet 34}: residual learning network with 34 layers that are made possible by skip connections. The 34 layer variant was chosen to decrease training time. \cite{he2016deep}
 \textbf{MobileNet V3 Large}: uses depthwise separable convolution from MobileNet V2 \cite{sandler2018mobilenetv2} along with squeeze-excitation blocks in residual layers from MnasNet \cite{tan2019mnasnet}. Howard \etal \cite{howard2019searching} also used network architecture search to find the most effective model. The large configuration was chosen to not compromise on the prediction accuracy.
 \textbf{EfficientNet B1}: uses compound scaling to scale the model by depth, width and resolution. The B1 version was chosen to have faster training without compromising on the accuracy. \cite{tan2019efficientnet}
-\section{Results} 
+\section{Results-2.5} 
 \label{sec:method}
 Two datasets in this study had a very small number of samples which caused the models to overfit early. To mitigate this, random contrast and sharpness adjustment \cite{nanni2021comparison} data augmentation techniques were used. Some scans in the datasets were anterior-posterior while some others were posterior-anterior and using the horizontal flip data augmentation would make the model invariant to these differences\cite{botev2022regularising}.
 Inception was the first model trained and each epoch took over 1 hour. To reduce the training time, the X-ray images were resized, pre-processed and split into train, test and validation sets separately. Furthermore, EfficientNet, MobileNet and ResNet 34 were chosen as they have a considerably low number of learnable parameters. Now each epoch is taking less than 4 minutes. 
@@ -175,7 +208,7 @@ Inception was the first model trained and each epoch took over 1 hour. To reduce
   \emph{X-Ray 8} &   &  &  &  &  &  &  &  &  &  &  &   \\ \hline
   \end{tabular}
   }
-  \caption{Model Metrics}
+  \caption{F1 (higher is better), time per epoch in seconds (lower is better), and number of epochs to reach the best validation loss (lower is better) for the 12 models that were trained.}
   \label{table:conducts}
   \end{table*}
 
@@ -201,7 +234,7 @@ Nine models were trained from scratch and the training, validation F1 score and 
 \begin{figure}[t]
   \centering
   \includegraphics[width=1\linewidth]{ablation.eps}  
-   \caption{Ablative Study F1 scores.}
+   \caption{Ablative Study F1 scores (Higher is better).}
    \vspace{-1em}
    \label{fig:ablation}
 \end{figure}
