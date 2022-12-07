@@ -134,22 +134,22 @@ model predictions better. An F1 score of 0.8 and 0.98 was achieved for the two m
 datasets, whereas the maximum F1 for the multilabel dataset with 7 classes was 0.46.
 
 \textbf{Related Works:} 
-Li \etal [] were among the first
+Li \etal \cite{li2014medical} were among the first
 to use CNNs in a medical setting. They used a single convolutional layer to classify 
 interstitial lung diseases using CT scans, achieving better performance than existing 
 approaches. Since then there has been a dramtic increase in application of CNNs 
 in healthcare, deep neural networks have been used to perform various tasks like 
-segmenting regions of interest in MRI [,], classifying X-Ray  
-[], MRI [], and CT [] scans.
-Further, GANs have been used to generate high quality scans [] 
+segmenting regions of interest in MRI \cite{kayalibay2017cnn,dolz2018hyperdense}, classifying X-Ray  
+\cite{rajpurkar2017chexnet}, MRI \cite{farooq2017deep}, and CT \cite{alakwaa2017lung} scans.
+Further, GANs have been used to generate high quality scans \cite{loey2020within} 
 when there is a lack of available data due to either privacy reasons or availability of subjects. 
 GANs have also been used to generate high quality CT scans from MRI scans 
-[]. Apart from radiographic scans,
+\cite{liu2021ct}. Apart from radiographic scans,
 deep CNNs have also been used to detect malarial parasite in blood smear images 
-[] with an accuracy of 99.96\%. Another interesting 
+\cite{umer2020novel} with an accuracy of 99.96\%. Another interesting 
 application is the use of 1-D convolutions to detect heart anomalies using ECG data
-[]. Researchers have also used architectures like the Inception V3 to perform 
-dermatologist level skin-cancer detection using skin lesion images [] using transfer 
+\cite{kiranyaz2015real}. Researchers have also used architectures like the Inception V3 to perform 
+dermatologist level skin-cancer detection using skin lesion images \cite{esteva2017dermatologist} using transfer 
 learning.  
 
 In the recent years, many researchers have tried to predict lung diseases using deep CNNs, 
@@ -157,17 +157,17 @@ Wang \etal \cite{wang2017chestx} used state of the art backbone architectures to
 a lung disease classifier for multilabel data by training only the prediction and transition 
 layers from scratch and leaving pre-trained ImageNet weights freezed while training. 
 They achieved a high AUC of over 0.6 for most of the classes in the dataset with this technique.
-Rajpurkar \etal [] created a 121 layer deep CNN - CheXNet to detect
+Rajpurkar \etal \cite{rajpurkar2017chexnet} created a 121 layer deep CNN - CheXNet to detect
 pneumonia using chest X-rays with radiologist level accuracy. 
-Labhane \etal [] used transfer learning with state of the art backbone architectures like VGG16, 
+Labhane \etal \cite{labhane2020detection} used transfer learning with state of the art backbone architectures like VGG16, 
 VGG19 and InceptionV3 to predict pneumonia in pediatric patients and achieved an F1 score of 0.97.
 Islam \etal combined CNN and LSTM 
-to create a COVID-19 detector []. The CNN extracted complex features from scans and the LSTM was 
+to create a COVID-19 detector \cite{islam2020combined}. The CNN extracted complex features from scans and the LSTM was 
 used as a classifier. This method resulted in an improvement over a vanilla CNN network and 
-an F1 score of 98.9\% was achieved. Abbas \etal [] created the 
+an F1 score of 98.9\% was achieved. Abbas \etal \cite{abbas2021classification} created the 
 DeTraC network to detect COVID in chest X-rays that improved performance of existing backbone 
 models significantly with the highest accuracy of 98.23\% using the VGG19 architecture.  
-Guefrechi \etal [] on the other hand used data augmentation techniques like random rotation, 
+Guefrechi \etal \cite{guefrechi2021deep} on the other hand used data augmentation techniques like random rotation, 
 flipping and noise with transfer learning on backbone architectures like ResNet50, 
 InceptionV3 and VGG16 to achieve a high accuracy of 98.3\%.
 
