@@ -59,7 +59,7 @@
 \def\confYear{2022}
 
 %%%%%%%%% TITLE - PLEASE UPDATE
-\title{Lung Disease Clasification - \subName Progress Report}
+\title{Lung Disease Clasification - \subName Final Report}
 \author{Rohan Chopra\\
 \small 40233019\\
 \and
@@ -363,6 +363,7 @@ with the mean and standard deviation of the training set of each of the selected
 Initial runs of the multilabel data training produced 0 F1 score due to the highly imbalanced 
 nature of multilabel classes. To mitigate this, class wise weights were calculated using the training 
 data and used with the loss function. This improved the F1 score considerably. 
+
 \begin{table*}[tbh]
   \centering
   \boldmath
@@ -386,7 +387,7 @@ data and used with the loss function. This improved the F1 score considerably.
   \begin{figure}[t]
     \centering
     \includegraphics[width=1\linewidth]{f1_loss.eps}  
-     \caption{Train \& Val F1 \& Loss plots for the 9 models.}
+     \caption{Train \& Val, F1 \& Loss plots for the 9 models.}
      %\vspace{-1em}
      \label{fig:acc_loss_sep}
   \end{figure}
@@ -406,17 +407,36 @@ are displayed in \cref{table:test_metrics}. Training and validation F1 score and
 
 \textbf{Main Results:}
 
-
-Nine models were trained from scratch and the training, validation F1 score and loss can be 
-seen in \cref{fig:acc_loss_sep}. From the plots it is clear that going from a smaller 
-architecture to a bigger architecture, makes the model start to overfit earlier. Another 
-interesting observation is that cosine annealing impacted the loss of MobileNet the most 
-every 10 epochs due to warm restarts. From the graphs it can be seen that all three 
-datasets had similar performance across models when trained for a high number of epochs. 
+From \cref{fig:acc_loss_sep} it is clear that going from a smaller 
+architecture to a bigger architecture, makes the model start to overfit earlier. 
+The MobileNet model was the most unstable among the three and also took more epochs to reach 
+the minima. The EfficientNet algorithm performs best for the COVID and Chest X-ray 8 
+dataset and all three architectures performed similar for the pneumonia dataset. 
+This shows that the compound scaline of EfficientNet gives good results for chest X-ray data.
 The X-ray 8 dataset performed the worst among the three datasets which could be due to the 
-high number of classes as compared to the other datasets. Surprisingly, the pneumonia 
-dataset performed worse than the COVID + pneumonia dataset which indicates that COVID 
-cases are easier to distinguish from pneumonia cases. 
+high number of classes, class imbalance and the multilabel nature of the problem. 
+Surprisingly, the pneumonia dataset performed worse than the COVID + pneumonia dataset 
+which indicates that COVID cases are easier to distinguish from pneumonia cases. 
+
+In \cref{fig:tl_acc_loss} we can see that the transfer learning model had a much better start than 
+the randomly initialized model. It also converged much quicker than the model trained from scratch.
+For the Pneumonia dataset, the model trained from scratch was highly unstable at the start 
+and could not catch up to the transfer learning model even after 100 epochs in terms of the F1 score.
+
+Finally, looking at \cref{table:test_metrics} we can see that the MobileNet architecture was 
+the fastest to train per epoch. It consistantly took less time per epoch but, if number of 
+epochs required to converge is considered we can see that it does not train the fastest all the time.
+It is also evident that ResNet converged the fastest with the exception of the COVID dataset where the 
+transfer learning EfficientNet converged the fastest. EfficientNet performs the best in terms of the 
+overall F1 score on the test set with the exception of the Pneumonia dataset where surprisingly 
+MobileNet performed the best. We can also see that the transfer learning models converged much quicker 
+than the other models with the exception of the Pneumonia dataset. Another surprising observation 
+is that the EfficientNet model takes the longest to train per epoch even though the number of trainable 
+parameters is nowhere close to ResNet. Also, MobileNet isn't as fast to train as expected when 
+compared to ResNet even though it has 4 times the learnable paramenters. This could be due to two 
+reasons, depthwise convolutions are not optimized in the version of PyTorch and CUDA we used and 
+our training is getting CPU bound due to the data augmentation before each training run which 
+would take the same amount of time for all the models. 
 
 
 
