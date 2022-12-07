@@ -179,23 +179,7 @@ In the following sections methodology of the approach and the results will be di
 \section{Methodology-2}
 \label{sec:prop_method}
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.7\linewidth]{pre_proc_img.eps}  
-   \caption{Effect of pre-processing on Chest X-ray images.}
-   %\vspace{-1em}
-   \label{fig:pre_proc_img}
-\end{figure}
 
-
-
-\begin{figure}
-  \subfloat[COVID Dataset]{\includegraphics[width = 1\linewidth]{samp_img.eps}}\\
-  \subfloat[Pneumonia Dataset]{\includegraphics[width = 1\linewidth]{abhishek_dataset_comparison.eps}}\\
-  \subfloat[Chest X-Ray 8 Dataset]{\includegraphics[width = 1\linewidth]{rohan_dataset_comparison.eps}}
-  \caption{Sample Chest X-rays from the datasets used.}
-  \label{fig:sample_imgs}
-  \end{figure}
 
 \begin{table}
   \centering
@@ -218,6 +202,14 @@ In the following sections methodology of the approach and the results will be di
 \textbf{Datasets:} (\cref{tab:selDataset}) with varying disease types were chosen to ensure 
 model robustness. Other criteria included the \textit{number of images per class} and 
 \textit{image quality} as noisy scans can lead to mis-diagnosis\cite{sivakumar2012computed}. 
+
+\begin{figure}
+  \subfloat[COVID Dataset]{\includegraphics[width = 1\linewidth]{samp_img.eps}}\\
+  \subfloat[Pneumonia Dataset]{\includegraphics[width = 1\linewidth]{abhishek_dataset_comparison.eps}}\\
+  \subfloat[Chest X-Ray 8 Dataset]{\includegraphics[width = 1\linewidth]{rohan_dataset_comparison.eps}}
+  \caption{Sample Chest X-rays from the datasets used.}
+  \label{fig:sample_imgs}
+  \end{figure}
 
 The \textbf{COVID} dataset was created by a team of researchers from Qatar University, Doha, 
 Qatar, and the University of Dhaka, Bangladesh along with collaborators from Pakistan 
@@ -257,6 +249,14 @@ The data consists of multiple scans from the same subject which could lead to da
 the train, val and test sets if a random train-test-val split was performed. 
 This was prevented with the use of GroupShuffleSplit from the scikit library. 
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.7\linewidth]{pre_proc_img.eps}  
+   \caption{Effect of pre-processing on Chest X-ray images.}
+   %\vspace{-1em}
+   \label{fig:pre_proc_img}
+\end{figure}
+
 Before training, all the images were pre-processed using histogram equalization and Gaussian blur 
 with a 5x5 filter as Giełczyk \etal \cite{gielczyk2022pre} showed that this improved the 
 F1 score by about 4\% for the chest X-ray classification task. Visually, the contrast of the scan improved 
@@ -268,7 +268,13 @@ model gets to learn from and ensure that the model is robust to scans from diffe
 RandomHorizontalFlip was also used to make the models invarient to the direction of the scan as 
 some scans were anterior-posterior while others were posterior-anterior.
 
-\textbf{Backbone Architectures:} (\cref{tab:selArch}) of various configuration and blocks were chosen. Other selection criteria were the \textit{number of trainable parameters}, important as total training time and hardware resources are limited for this project and the \textit{top 5 classification accuracy} on the ImageNet 1K benchmark dataset.
+\textbf{Backbone Architectures:} (\cref{tab:selArch}) of various configuration and blocks were chosen 
+to ensure that different ideas are tested in this study. 
+Other selection criteria were the \textit{number of trainable parameters}, important to keep track of 
+the total training time, \textit{FLOPS} as we wanted models that could easily be 
+deployed on to embedded devices and the \textit{top 5 classification accuracy} on the ImageNet 
+1K benchmark dataset.
+
 \begin{table}
   \centering
   \begin{tabular}{p{1.7cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}}
@@ -286,26 +292,52 @@ some scans were anterior-posterior while others were posterior-anterior.
   %\vspace{-1.5em}
   \label{tab:selArch}
 \end{table}
-\textbf{ResNet 34}: residual learning network with 34 layers that are made possible by skip 
-connections. The 34 layer variant was chosen to decrease training time for this study. 
+
+\textbf{ResNet 34} residual learning network with 34 layers that are made possible by skip 
+connections. The 34 layer variant was chosen to decrease training time while not compromising on 
+the accuracy much. This architecture had the highest trainable parameters and FLOPS while the lowest 
+Imagenet accuracy.
 \cite{he2016deep}
-\textbf{MobileNet V3 Large}: uses depthwise separable convolution from MobileNet V2 
+
+\textbf{MobileNet V3 Large} uses depthwise separable convolution from MobileNet V2 
 \cite{sandler2018mobilenetv2} along with squeeze-excitation blocks in residual layers 
-from MnasNet \cite{tan2019mnasnet}. Howard \etal \cite{howard2019searching} also used 
+from MnasNet \cite{tan2019mnasnet}. This makes it really quick to train while still performing 
+at par with other architectures. This architecture had the lowest trainable parameters and FLOPS 
+among the three selected. Howard \etal \cite{howard2019searching} also used 
 network architecture search to find the most effective model. The large configuration 
 was chosen to not compromise on the prediction accuracy.
-\textbf{EfficientNet B1}: uses compound scaling to scale the model by depth, width and 
+
+\textbf{EfficientNet B1} uses compound scaling to scale the model by depth, width and 
 resolution. The B1 version was chosen to have faster training without compromising on the 
-accuracy. \cite{tan2019efficientnet}
+accuracy. \cite{tan2019efficientnet} This architecture performs the best among the selected 
+on the Imagenet benchmark dataset while having a third of the trainable parameters of Resnet34.
 
 \textbf{Optimization Algorithm:}
-The Adam optimizer \cite{kingma2014adam} was chosen as the algorithm of choice as it converges 
-faster on image classification tasks and does not requires little tuning. It integrates benefits of  
-RMSProp and Adagrad to produce robust results on a wide range of problems.
+The Adam optimizer \cite{kingma2014adam} is an adaptive learning rate algorithm which 
+was chosen as the algorithm of choice as it converges faster by integrating benefits of  
+RMSProp and momentum. It is also robust to hyperparameters but, 
+requires tweaking of the learning rate depending on the task at hand. For this study, 
+we used a learning rate of 0.01 and the author recommend settings for $\beta_{1} =
+0.9$, $\beta_{2} = 0.999$ and $\epsilon = 10^{-8}$ for the first and second order moment estimate 
+as defined in \cref{eq:adam1} and \cref{eq:adam2} where $\beta_{1}$ and $\beta_{2}$ control the decay rates.
+\begin{equation}
+m_{t} = \beta_{1} \cdot m_{t-1} + (1 - \beta_{1}) \cdot g_{t}
+\label{eq:adam1}
+\end{equation}
+\begin{equation}
+  v_{t} = \beta_{2} \cdot v_{t-1} + (1 - \beta_{2}) \cdot g_{t}^{2}
+  \label{eq:adam2}
+  \end{equation}
+We further used the Cosine annealing \cite{loshchilov2016sgdr} learning rate scheduler 
+to reduce the learning rate as the training progressed down to a low of 0.001. 
 
 \section{Results-2.5} 
 \label{sec:method}
 \textbf{Experiment Setup:}
+Two datasets in this study presented the multiclass classification problem while the third, 
+chest X-ray 8 dataset presented the multiclass, multilabel classification problem. Thus, the 
+training methodology was separated for these two problems. For the multiclass problem, the softmax
+
 
 Two datasets in this study had a very small number of samples which caused the models to 
 overfit early. To mitigate this, random contrast and sharpness adjustment 
