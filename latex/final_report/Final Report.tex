@@ -187,7 +187,7 @@ In the following sections methodology of the approach and the results will be di
     \toprule
     Dataset & No. of Images & Classes & Size\\
     \midrule
-    COVID\cite{RAHMAN2021104319,9144185,kagglecovid} & 10000k:3.6k:1.3k & 3 & 299\textsuperscript{2}\\
+    COVID\cite{RAHMAN2021104319,9144185,kagglecovid} & 3.6k:3.6k:1.3k & 3 & 299\textsuperscript{2}\\
     \midrule
     Pneumonia\cite{kermany2018labeled,kagglepneu} & 3k:1.5k:1.5k & 3 & 224\textsuperscript{2}\\
     \midrule
@@ -220,7 +220,7 @@ three classes, COVID, viral pneumonia and normal. X-rays with widespread, hazy,
 and irregular ground glass opacities are of the COVID-19 class \cite{jacobi2020portable}. 
 Whereas, the ones with haziness only in the lower regions \cite{zhan2021clinical} are 
 viral pneumonia cases as shown in \cref{fig:sample_imgs}. Chest X-rays of normal lungs provide 
-a clear view of the lungs. The normal class was undersampled to use only ***3.6k*** scans and reduce the 
+a clear view of the lungs. The normal class was undersampled to use only 3.6k scans and reduce the 
 data imbalance.
 
 The \textbf{Pneumonia}, dataset contains scans from pediatric patients of one to five year olds 
@@ -272,8 +272,8 @@ some scans were anterior-posterior while others were posterior-anterior \cite{bo
 \textbf{Backbone Architectures:} (\cref{tab:selArch}) of various configuration and blocks were chosen 
 to ensure that different ideas are tested in this study. 
 Other selection criteria were the \textit{number of trainable parameters}, important to keep track of 
-the total training time, \textit{FLOPS} as we wanted models that could easily be 
-deployed on to embedded devices and the \textit{top 5 classification accuracy} on the ImageNet 
+the total training time, \textit{FLOPS} as models that could easily be 
+deployed on to embedded devices were required and the \textit{top 5 classification accuracy} on the ImageNet 
 1K benchmark dataset.
 
 \begin{table}
@@ -318,8 +318,8 @@ The Adam optimizer \cite{kingma2014adam} is an adaptive learning rate algorithm 
 was chosen as the algorithm of choice as it converges faster by integrating benefits of  
 RMSProp and momentum. It is also robust to hyperparameters but, 
 requires tweaking of the learning rate depending on the task at hand. For this study, 
-we used a learning rate of 0.01 and the author recommend settings for $\beta_{1} =
-0.9$, $\beta_{2} = 0.999$ and $\epsilon = 10^{-8}$ for the first and second order moment estimate 
+a learning rate of 0.01 and the author recommend settings for $\beta_{1} =
+0.9$, $\beta_{2} = 0.999$ and $\epsilon = 10^{-8}$ were used for the first and second order moment estimate 
 as defined in \cref{eq:adam1} and \cref{eq:adam2} where $\beta_{1}$ and $\beta_{2}$ control the decay rates.
 \begin{equation}
 m_{t} = \beta_{1} \cdot m_{t-1} + (1 - \beta_{1}) \cdot g_{t}
@@ -329,14 +329,14 @@ m_{t} = \beta_{1} \cdot m_{t-1} + (1 - \beta_{1}) \cdot g_{t}
   v_{t} = \beta_{2} \cdot v_{t-1} + (1 - \beta_{2}) \cdot g_{t}^{2}
   \label{eq:adam2}
   \end{equation}
-We further used the Cosine annealing \cite{loshchilov2016sgdr} learning rate scheduler 
+Further, Cosine annealing \cite{loshchilov2016sgdr} learning rate scheduler was used 
 to reduce the learning rate as the training progressed down to a low of 0.001. 
 
 \section{Results-2.5} 
-\label{sec:method}
+\label{sec:result}
 \textbf{Experiment Setup:}
 
-First we performed undersampling as described in \cref{sec:prop_method} on the datasets. Then,
+First undersampling was performed as described in \cref{sec:prop_method} on the datasets. Then,
 the scans were pre-processed using histogram equalization and Gaussian blur before resizing them 
 and storing them in separate directories to make it easier for PyTorch dataloaders. 
 Two datasets in this study presented the multiclass classification problem while the third, 
@@ -418,45 +418,57 @@ high number of classes, class imbalance and the multilabel nature of the problem
 Surprisingly, the pneumonia dataset performed worse than the COVID + pneumonia dataset 
 which indicates that COVID cases are easier to distinguish from pneumonia cases. 
 
-In \cref{fig:tl_acc_loss} we can see that the transfer learning model had a much better start than 
+In \cref{fig:tl_acc_loss} it can be seen that the transfer learning model had a much better start than 
 the randomly initialized model. It also converged much quicker than the model trained from scratch.
 For the Pneumonia dataset, the model trained from scratch was highly unstable at the start 
 and could not catch up to the transfer learning model even after 100 epochs in terms of the F1 score.
 
-Finally, looking at \cref{table:test_metrics} we can see that the MobileNet architecture was 
+Finally, looking at \cref{table:test_metrics} it can be seen that the MobileNet architecture was 
 the fastest to train per epoch. It consistantly took less time per epoch but, if number of 
-epochs required to converge is considered we can see that it does not train the fastest all the time.
+epochs required to converge is considered, it does not train the fastest all the time.
 It is also evident that ResNet converged the fastest with the exception of the COVID dataset where the 
 transfer learning EfficientNet converged the fastest. EfficientNet performs the best in terms of the 
 overall F1 score on the test set with the exception of the Pneumonia dataset where surprisingly 
-MobileNet performed the best. We can also see that the transfer learning models converged much quicker 
+MobileNet performed the best. The transfer learning models converged much quicker 
 than the other models with the exception of the Pneumonia dataset. Another surprising observation 
 is that the EfficientNet model takes the longest to train per epoch even though the number of trainable 
 parameters is nowhere close to ResNet. Also, MobileNet isn't as fast to train as expected when 
 compared to ResNet even though it has 4 times the learnable paramenters. This could be due to two 
-reasons, depthwise convolutions are not optimized in the version of PyTorch and CUDA we used and 
-our training is getting CPU bound due to the data augmentation before each training run which 
+reasons, depthwise convolutions are not optimized in the version of PyTorch and CUDA used and 
+training is getting CPU bound due to the data augmentation before each training run which 
 would take the same amount of time for all the models. 
-
-
 
 \begin{figure}
   \subfloat[Resnet]{\includegraphics[width = 0.5\linewidth]{tsne_pneumonia_resnet.eps}}
   \subfloat[MobileNet]{\includegraphics[width = 0.5\linewidth]{tsne_pneumonia_mobilenet.eps}}\\
   \subfloat[EfficientNet]{\includegraphics[width = 0.5\linewidth]{tsne_pneumonia_efficientnet.eps}}
   \subfloat[EN - Transfer Learning]{\includegraphics[width = 0.5\linewidth]{tsne_pneumonia_efficientnet_tl.eps}}
-  \caption{T-SNE and Confusion matrics of the Pneumonia dataset.}
+  \caption{T-SNE and Confusion matrics for the test set of the Pneumonia dataset.}
   \label{fig:tsne_pneumonia}
 \end{figure}
+
+
+\cref{fig:tsne_pneumonia} shows that the models are able to differentiate well between the normal and pneumonia 
+classes but struggle with the viral pneumonia vs bacterial pneumonia classification. MobileNet performs better 
+but the EfficientNet transfer learning model creates better separation of classes. Thus, even though 
+MobileNet performs better in this case, 
+the EfficientNet transfer learning model would generalize well on new unseen data. This is correlated in 
+the confusion matrix where the transfer learning and MobileNet models perform the best.
 
 \begin{figure}
   \subfloat[Resnet]{\includegraphics[width = 0.5\linewidth]{tsne_covid_pneumonia_resnet.eps}}
   \subfloat[MobileNet]{\includegraphics[width = 0.5\linewidth]{tsne_covid_pneumonia_mobilenetnet.eps}}\\
   \subfloat[EfficientNet]{\includegraphics[width = 0.5\linewidth]{tsne_covid_pneumonia_efficientnet.eps}}
   \subfloat[EN - Transfer Learning]{\includegraphics[width = 0.5\linewidth]{tsne_covid_pneumonia_efficientnet_tl.eps}}
-  \caption{T-SNE and Confusion matrics of the COVID dataset.}
+  \caption{T-SNE and Confusion matrics for the test set of the COVID dataset.}
   \label{fig:tsne_covid}
 \end{figure}
+
+\cref{fig:tsne_covid} shows that all models do a good job of separating classes to create distinct clusters 
+but, the transfer learning model creates better clusters with separate smaller clusters. These smaller 
+clusters could indicate other factors of the disease, for example the severity and amount of lung damage caused 
+by the disease. This performance of the transfer learning model can be confirmed by looking at the confusion 
+matrix as well.
 
 \begin{figure}
   \subfloat[Resnet]{\includegraphics[width = 0.5\linewidth]{tsne_xray8_resnet.eps}}
@@ -467,13 +479,9 @@ would take the same amount of time for all the models.
   \label{fig:tsne_xray8}
 \end{figure}
 
-\begin{figure}
-  \subfloat[COVID]{\includegraphics[width = 1\linewidth]{gradcam_covid_pneumonia_1.eps}}\\
-  \subfloat[Pneumonia]{\includegraphics[width = 1\linewidth]{gradcam_covid_pneumonia_3.eps}}\\
-  \subfloat[Normal]{\includegraphics[width = 1\linewidth]{gradcam_covid_pneumonia_2.eps}}
-  \caption{GradCAM visualization for the COVID dataset.}
-  \label{fig:gradcam_covid}
-\end{figure}
+The t-SNE plots for the Chest X-ray 8 dataset is quite different as it is a multi label. Thus, for each class 
+a plot is generated. 
+
 
 \begin{figure}
   \subfloat[Bacterial Pneumonia]{\includegraphics[width = 1\linewidth]{gradcam_pneumonia_1_.eps}}\\
@@ -482,6 +490,30 @@ would take the same amount of time for all the models.
   \caption{GradCAM visualization for the Pneumonia dataset.}
   \label{fig:gradcam_pneumonia}
 \end{figure}
+
+\cref{fig:gradcam_pneumonia} shows the gradCAM visualization of the last layer of the convolutional network.
+Here it can be seen that the ResNet is learning completely different features as compared to the other 
+models. This could be the reason for its low performance. In case of bacterial pneumonia, the network identifies 
+affected area on the right side of the scan. On the other hand, in case of viral pneumonia, models look at both 
+sides of the lungs. This correlates with the actual progrssion of these diseases as given in \cref{sec:prop_method}.
+
+
+
+\begin{figure}
+  \subfloat[COVID]{\includegraphics[width = 1\linewidth]{gradcam_covid_pneumonia_1.eps}}\\
+  \subfloat[Pneumonia]{\includegraphics[width = 1\linewidth]{gradcam_covid_pneumonia_3.eps}}\\
+  \subfloat[Normal]{\includegraphics[width = 1\linewidth]{gradcam_covid_pneumonia_2.eps}}
+  \caption{GradCAM visualization for the COVID dataset.}
+  \label{fig:gradcam_covid}
+\end{figure}
+
+\cref{fig:gradcam_covid} shows that MobileNet activates the entire image incase of COVID, this be the 
+reason for its low performance. In case of pneumonia, the EfficientNet models identifies 
+affected areas on the bootom of the lungs. On the other hand, in case of COVID, the models look at a bigger 
+region of the lungs. This correlates with how these diseases impact the lungs as given in \cref{sec:prop_method}.
+
+
+
 
 \textbf{Ablative Study:}
 \begin{figure}[t]
@@ -497,22 +529,20 @@ From the training and validation F1 score and loss plots given in
 \cref{fig:ablation_plot} it is seen that a very high learning rate of 0.1 is highly unstable and 
 prevents the model from reaching close to global minima. Similarly, learning rate of 0.05 also prevented 
 the model from converging on the validation set even after 100 epochs. The other three learning 
-rates all converged on the validation set but, the learning rate of 0.01 was the most stable 
-and reached the highest F1 score earliest. On the other hand, learning rate of 0.001 performed better 
-on the loss plot.
+rates all converged on the validation set but, the learning rate of 0.001 was the most stable 
+and reached the highest F1 score earliest. On the other hand, learning rate of 0.01 performed marginally 
+better on the loss plot.
 \begin{figure}[t]
   \centering
-  \includegraphics[width=1\linewidth]{ablation.eps}  
+  \includegraphics[width=1\linewidth]{tl_ablation_f1.eps}  
    \caption{Ablative Study F1 scores (Higher is better).}
    %\vspace{-1em}
    \label{fig:ablation}
 \end{figure}
-From \cref{fig:ablation} we can see that the best performing learning rate is 0.001 
-on the F1 score of the test set with 0.005, 0.01 and 0.1 close second** check**. 
-
-
-
-
+From \cref{fig:ablation} it can be seen that the best performing learning rate is 0.001 
+on the F1 score of the test set with 0.005, 0.01 close second and 0.05, 0.1 performing the worst.
+This matches the results of the validation set on \cref{fig:ablation_plot}. Thus, a learning rate of 
+0.001 performs the best on the COVID dataset with the transfer learning EfficientNet model.
 
 
 %%%%%%%%% REFERENCES
@@ -522,3 +552,15 @@ on the F1 score of the test set with 0.005, 0.01 and 0.1 close second** check**.
 \bibliography{egbib}
 }
 \end{document}
+
+\begin{figure}
+  \subfloat[Atelectasis]{\includegraphics[width = 0.25\linewidth]{tsne_xray8_efficientnet_tl_Atelectasis.eps}}
+  \subfloat[Consolidation]{\includegraphics[width = 0.25\linewidth]{tsne_xray8_efficientnet_tl_Consolidation.eps}}
+  \subfloat[Effusion]{\includegraphics[width = 0.25\linewidth]{tsne_xray8_efficientnet_tl_Effusion.eps}}
+  \subfloat[Pneumothorax]{\includegraphics[width = 0.25\linewidth]{tsne_xray8_efficientnet_tl_No_findingPneumothorax.eps}}\\
+  \subfloat[Mass]{\includegraphics[width = 0.3\linewidth]{tsne_xray8_efficientnet_tl_Mass.eps}}
+  \subfloat[Nodule]{\includegraphics[width = 0.3\linewidth]{tsne_xray8_efficientnet_tl_Nodule.eps}}
+  \subfloat[Normal]{\includegraphics[width = 0.3\linewidth]{tsne_xray8_efficientnet_tl_No_finding.eps}}
+  \caption{Confusion matrics of the Chest X-ray 8 dataset.}
+  \label{fig:cm_xray8}
+\end{figure}
