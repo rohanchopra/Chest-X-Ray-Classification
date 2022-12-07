@@ -218,37 +218,55 @@ In the following sections methodology of the approach and the results will be di
 \textbf{Datasets:} (\cref{tab:selDataset}) with varying disease types were chosen to ensure 
 model robustness. Other criteria included the \textit{number of images per class} and 
 \textit{image quality} as noisy scans can lead to mis-diagnosis\cite{sivakumar2012computed}. 
-The \textbf{COVID} dataset was created using 43 \cite{covidpneumonia2020data} different 
-publications. \cite{RAHMAN2021104319,9144185,kagglecovid} X-rays with widespread, hazy, 
+
+The \textbf{COVID} dataset was created by a team of researchers from Qatar University, Doha, 
+Qatar, and the University of Dhaka, Bangladesh along with collaborators from Pakistan 
+and Malaysia in collaboration with medical doctors from the Italian Society of Medical 
+and Interventional Radiology database using 43 \cite{covidpneumonia2020data} different 
+publications \cite{RAHMAN2021104319,9144185,kagglecovid}. It is a multiclass data with 
+three classes, COVID, viral pneumonia and normal.  X-rays with widespread, hazy, 
 and irregular ground glass opacities are of the COVID-19 class \cite{jacobi2020portable}. 
 Whereas, the ones with haziness only in the lower regions \cite{zhan2021clinical} are 
-viral pneumonia cases as shown in \cref{fig:sample_imgs}.
+viral pneumonia cases as shown in \cref{fig:sample_imgs}. Chest X-rays of normal lungs provide 
+a clear view of the lungs. 
+
 The \textbf{Pneumonia}, dataset contains scans from pediatric patients of one to five year olds 
-collected as part of patients' routine clinical care. 
-\cite{kermany2018labeled,kagglepneu} Scans with one white condensed area affecting only one 
-side of the lungs are tagged as bacterial pneumonia\cite{areviral}. Whereas, X-rays which 
+collected as part of patients' routine clinical care at the Guangzhou Women and Children's 
+Medical Center, Guangzhou, China. \cite{kermany2018labeled,kagglepneu} 
+This dataset is multiclass with three classes, viral pneumonia, bacterial pneumonia and normal.
+Scans with one white condensed area affecting only one 
+side of the lungs are tagged as bacterial pneumonia\cite{areviral} as bacteria tends to 
+aggressively attack one part of the lungs causing inflammation to replace the cells 
+that were otherwise filled with air. On the other hand, X-rays which 
 show bilateral patchy areas of consolidation are classified as viral pneumonia
-\cite{guo2012radiological}. 
-The \textbf{Chest X-ray 8} dataset was released by NIH \cite{chestxray2017data} with over 100k 
-chest X-ray images and their radiological reports which Wang \etal \cite{wang2017chestx} 
-used to create disease labels through NLP. \cite{kaggle8} It contains 15 classes but only 
-7 were chosen for this study. This dataset is significantly different from the 
+\cite{guo2012radiological} as viruses attack both sides of the lungs producing a 
+homogeneous inflammatory reaction causing mucus and cellular debris. Normal scans here as well 
+produce a clear view of the lungs. 
+
+NIH \cite{chestxray2017data} released over 100k anonymized chest X-ray images along with 
+their radiological reports from over 30k patients. Wang \etal \cite{wang2017chestx} 
+used this data to create the \textbf{Chest X-ray 8} dataset by generating disease labels 
+through NLP fromt he radiological reports. \cite{kaggle8} The dataset contains 15 classes but only 
+7 \cref{fig:sample_imgs} were chosen for this study. This dataset is significantly different from the 
 other two as it is a multilabel dataset. Classes were iteratively removed, ensuring that
-classes are not highly imbalanced to finally reach the 7 classes. With over 29,000 images of size 
+they are not highly imbalanced to finally reach the 7 classes. With over 29,000 images of size 
 1024 x 1024, this dataset was the biggest and thus had to be resized down to 384 x 384 to 
-reduce training time. Furthermore, normal class images were undersampled to choose only 7000 scans.
-The data consisted of multiple scans from the same subject which would lead to data leakage between 
-the train, val and test sets. This was prevented with the use of GroupShuffleSplit from the scikit
-library. 
+reduce training and processing times. Furthermore, normal class images were undersampled by first
+choosing one scan per patient and then selecting 7000 scans out of this subset randomly. 
+The data consists of multiple scans from the same subject which could lead to data leakage between 
+the train, val and test sets if a random train-test-val split was performed. 
+This was prevented with the use of GroupShuffleSplit from the scikit library. 
 
 Before training, all the images were pre-processed using histogram equalization and Gaussian blur 
 with a 5x5 filter as Giełczyk \etal \cite{gielczyk2022pre} showed that this improved the 
-F1 score by about 4\% for chest X-ray classification. Visually, the contrast of the scan improved 
+F1 score by about 4\% for the chest X-ray classification task. Visually, the contrast of the scan improved 
 and allowed irregularities to stand out as shown in \cref{fig:pre_proc_img}. Next, the 
 scans were divided into train, validation and test with the 70:15:15 split. 
-During training, the scans were augmented using RandomHorizontalFlip, RandomAdjustSharpness, and 
+During training, the scans were augmented using RandomAdjustSharpness and 
 RandomAutocontrast in Pytorch \cite{transforms} to increase the number of images the 
 model gets to learn from and ensure that the model is robust to scans from different machines.
+RandomHorizontalFlip was also used to make the models invarient to the direction of the scan as 
+some scans were anterior-posterior while others were posterior-anterior.
 
 \textbf{Backbone Architectures:} (\cref{tab:selArch}) of various configuration and blocks were chosen. Other selection criteria were the \textit{number of trainable parameters}, important as total training time and hardware resources are limited for this project and the \textit{top 5 classification accuracy} on the ImageNet 1K benchmark dataset.
 \begin{table}
