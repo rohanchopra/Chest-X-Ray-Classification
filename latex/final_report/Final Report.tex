@@ -216,11 +216,12 @@ Qatar, and the University of Dhaka, Bangladesh along with collaborators from Pak
 and Malaysia in collaboration with medical doctors from the Italian Society of Medical 
 and Interventional Radiology database using 43 \cite{covidpneumonia2020data} different 
 publications \cite{RAHMAN2021104319,9144185,kagglecovid}. It is a multiclass data with 
-three classes, COVID, viral pneumonia and normal.  X-rays with widespread, hazy, 
+three classes, COVID, viral pneumonia and normal. X-rays with widespread, hazy, 
 and irregular ground glass opacities are of the COVID-19 class \cite{jacobi2020portable}. 
 Whereas, the ones with haziness only in the lower regions \cite{zhan2021clinical} are 
 viral pneumonia cases as shown in \cref{fig:sample_imgs}. Chest X-rays of normal lungs provide 
-a clear view of the lungs. 
+a clear view of the lungs. The normal class was undersampled to use only ***3.6k*** scans and reduce the 
+data imbalance.
 
 The \textbf{Pneumonia}, dataset contains scans from pediatric patients of one to five year olds 
 collected as part of patients' routine clinical care at the Guangzhou Women and Children's 
@@ -263,10 +264,10 @@ F1 score by about 4\% for the chest X-ray classification task. Visually, the con
 and allowed irregularities to stand out as shown in \cref{fig:pre_proc_img}. Next, the 
 scans were divided into train, validation and test with the 70:15:15 split. 
 During training, the scans were augmented using RandomAdjustSharpness and 
-RandomAutocontrast in Pytorch \cite{transforms} to increase the number of images the 
+RandomAutocontrast \cite{nanni2021comparison} in Pytorch \cite{transforms} to increase the number of images the 
 model gets to learn from and ensure that the model is robust to scans from different machines.
 RandomHorizontalFlip was also used to make the models invarient to the direction of the scan as 
-some scans were anterior-posterior while others were posterior-anterior.
+some scans were anterior-posterior while others were posterior-anterior \cite{botev2022regularising}.
 
 \textbf{Backbone Architectures:} (\cref{tab:selArch}) of various configuration and blocks were chosen 
 to ensure that different ideas are tested in this study. 
@@ -334,23 +335,34 @@ to reduce the learning rate as the training progressed down to a low of 0.001.
 \section{Results-2.5} 
 \label{sec:method}
 \textbf{Experiment Setup:}
+
+First we performed undersampling as described in \cref{sec:prop_method} on the datasets. Then,
+the scans were pre-processed using histogram equalization and Gaussian blur before resizing them 
+and storing them in separate directories to make it easier for PyTorch dataloaders. 
 Two datasets in this study presented the multiclass classification problem while the third, 
 chest X-ray 8 dataset presented the multiclass, multilabel classification problem. Thus, the 
-training methodology was separated for these two problems. For the multiclass problem, the softmax
+training methodology was separated for these two problems. For the multilabel problem, 
+a softmax layer had to be added before the loss function to get 0 or 1 prediction for 
+all the classes of the data. For this, the BCEWITHLOGITSLOSS function of PyTorch was used 
+as it combines the Sigmoid layer and the BCELoss function in one single class. This makes 
+theses operations more numerically stable than their separate counterparts \cite{bcelogits}.
+The backbone architectures were obtained directly from the torchvision library and the final 
+classification layer was modified for the selected datasets. For the models which had to be 
+trained from scratch, the weights were randomly initialized and the entire model was trained 
+for a total of 100 epochs each. For the transfer learning models, the weights were initialized 
+with the IMAGENET1K\_V2 weights but the entire model was fine-tuned. The rationale behind 
+performing deep-tuning was that the Imagenet data is very different from chest X-ray scans 
+thus the model would need to learn features from X-ray scans. 
 
+While training the best model by validation loss was saved to prevent the usage of overfit 
+models for test set analysis. The actual and predicted results from each epoch was also stored 
+to calculate the F1 score at each step of training. While calculating the F1 score, macro averaging 
+was used to get an average score across classes. All images were normalized before getting trained 
+with the mean and standard deviation of the training set of each of the selected datasets.
 
-Two datasets in this study had a very small number of samples which caused the models to 
-overfit early. To mitigate this, random contrast and sharpness adjustment 
-\cite{nanni2021comparison} data augmentation techniques were used. Some scans in the 
-datasets were anterior-posterior while some others were posterior-anterior and using the 
-horizontal flip data augmentation would make the model invariant to these differences
-\cite{botev2022regularising}.
-Inception was the first model trained and each epoch took over 1 hour. To reduce the 
-training time, the X-ray images were resized, pre-processed and split into train, test and 
-validation sets separately. Furthermore, EfficientNet, MobileNet and ResNet 34 were chosen 
-as they have a considerably low number of learnable parameters. Now each epoch is taking 
-less than 4 minutes. 
-
+Initial runs of the multilabel data training produced 0 F1 score due to the highly imbalanced 
+nature of multilabel classes. To mitigate this, class wise weights were calculated using the training 
+data and used with the loss function. This improved the F1 score considerably. 
 \begin{table*}[tbh]
   \centering
   \boldmath
@@ -362,14 +374,15 @@ less than 4 minutes.
    \hline
   \emph{Pneumonia}           & 0.784 & 82 &  \textbf{22} &   \textbf{0.804} & \textbf{75} &  42 &   0.768 & 110 &  44 &   0.782 & 114 &  70  \\
   \hline
-  \emph{COVID}        & 0.963 & 68 & 71 & 0.959 & \textbf{45} & 82 & 0.970 & 80 & 89 & \textbf{0.978} & 56 & \textbf{46}   \\ % \hdashline
+  \emph{COVID}        & 0.967 & 68 & 71 & 0.959 & \textbf{45} & 82 & \textbf{0.979} & 80 & 89 & 0.978 & 56 & \textbf{46}   \\ % \hdashline
   \hline
   \emph{X-Ray 8} &   0.411 & 11,502 & \textbf{19} & 0.406 & \textbf{7,275} & 42 & 0.445 & 13,820 & 31 & \textbf{0.457} & 13,813 & 29   \\ \hline
   \end{tabular}
   }
   \caption{F1 (higher is better), time per epoch in seconds (lower is better), and number of epochs to reach the best validation loss (lower is better) for the 12 models that were trained.}
-  \label{table:conducts}
+  \label{table:test_metrics}
   \end{table*}
+  
   \begin{figure}[t]
     \centering
     \includegraphics[width=1\linewidth]{f1_loss.eps}  
@@ -385,6 +398,15 @@ less than 4 minutes.
      %\vspace{-1em}
      \label{fig:tl_acc_loss}
   \end{figure}
+
+Finally, the best models from each run by validation loss were used to get the test set metrics that 
+are displayed in \cref{table:test_metrics}. Training and validation F1 score and loss are also provided in 
+\cref{fig:acc_loss_sep} and \cref{fig:tl_acc_loss}.
+
+
+\textbf{Main Results:}
+
+
 Nine models were trained from scratch and the training, validation F1 score and loss can be 
 seen in \cref{fig:acc_loss_sep}. From the plots it is clear that going from a smaller 
 architecture to a bigger architecture, makes the model start to overfit earlier. Another 
@@ -396,7 +418,7 @@ high number of classes as compared to the other datasets. Surprisingly, the pneu
 dataset performed worse than the COVID + pneumonia dataset which indicates that COVID 
 cases are easier to distinguish from pneumonia cases. 
 
-\textbf{Main Results:}
+
 
 \begin{figure}
   \subfloat[Resnet]{\includegraphics[width = 0.5\linewidth]{tsne_pneumonia_resnet.eps}}
@@ -425,10 +447,23 @@ cases are easier to distinguish from pneumonia cases.
   \label{fig:tsne_xray8}
 \end{figure}
 
+\begin{figure}
+  \subfloat[COVID]{\includegraphics[width = 1\linewidth]{gradcam_covid_pneumonia_1.eps}}\\
+  \subfloat[Pneumonia]{\includegraphics[width = 1\linewidth]{gradcam_covid_pneumonia_3.eps}}\\
+  \subfloat[Normal]{\includegraphics[width = 1\linewidth]{gradcam_covid_pneumonia_2.eps}}
+  \caption{GradCAM visualization for the COVID dataset.}
+  \label{fig:gradcam_covid}
+\end{figure}
+
+\begin{figure}
+  \subfloat[Bacterial Pneumonia]{\includegraphics[width = 1\linewidth]{gradcam_pneumonia_1_.eps}}\\
+  \subfloat[Viral Pneumonia]{\includegraphics[width = 1\linewidth]{gradcam_pneumonia_2_.eps}}\\
+  \subfloat[Normal]{\includegraphics[width = 1\linewidth]{gradcam_pneumonia_0_.eps}}
+  \caption{GradCAM visualization for the Pneumonia dataset.}
+  \label{fig:gradcam_pneumonia}
+\end{figure}
+
 \textbf{Ablative Study:}
-
-
-
 \begin{figure}[t]
   \centering
   \includegraphics[width=1\linewidth]{ablation_plot.eps}  
@@ -436,6 +471,15 @@ cases are easier to distinguish from pneumonia cases.
    %\vspace{-1em}
    \label{fig:ablation_plot}
 \end{figure}
+For the ablative study, the COVID dataset was chosen along with the EfficientNet B1 architecture 
+trained from scratch. The learning rates chosen for the study are 0.001, 0.005, 0.01, 0.05, and 0.1.
+From the training and validation F1 score and loss plots given in 
+\cref{fig:ablation_plot} it is seen that a very high learning rate of 0.1 is highly unstable and 
+prevents the model from reaching close to global minima. Similarly, learning rate of 0.05 also prevented 
+the model from converging on the validation set even after 100 epochs. The other three learning 
+rates all converged on the validation set but, the learning rate of 0.01 was the most stable 
+and reached the highest F1 score earliest. On the other hand, learning rate of 0.001 performed better 
+on the loss plot.
 \begin{figure}[t]
   \centering
   \includegraphics[width=1\linewidth]{ablation.eps}  
@@ -443,6 +487,11 @@ cases are easier to distinguish from pneumonia cases.
    %\vspace{-1em}
    \label{fig:ablation}
 \end{figure}
+From \cref{fig:ablation} we can see that the best performing learning rate is 0.001 
+on the F1 score of the test set with 0.005, 0.01 and 0.1 close second** check**. 
+
+
+
 
 
 
