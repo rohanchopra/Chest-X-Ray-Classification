@@ -76,19 +76,18 @@ Abhishek Handa\\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-  The ABSTRACT is to be in fully justified italicized text, at the top of the left-hand column, 
-  below the author and affiliation information.
-  Use the word ``Abstract'' as the title, in 12-point Times, boldface type, centered relative 
-  to the column, initially capitalized.
-  The abstract is to be in 10-point, single-spaced type.
-  Leave two blank lines after the Abstract, then begin the main text.
-  Look at previous CVPR abstracts to get a feel for style and length.
-  Look at previous CVPR abstracts to get a feel for style and length.
-  Look at previous CVPR abstracts to get a feel for style and length.
-  Look at previous CVPR abstracts to get a feel for style and length.
-  Look at previous CVPR abstracts to get a feel for style and length.
-  Look at previous CVPR abstracts to get a feel for style and length.
-  Look at previous CVPR abstracts.
+  Chest X-rays scans are among the most accessible ways to diagnose lung 
+  diseases. This study tries to compare the detection of lung diseases using these scans from 
+  three different datasets using deep neural networks. Three different 
+  backbone architectures, ResNet34, MobileNet V3 Large and EfficientNet B1 
+  were used along with a set of models trained using transfer learning. 
+  It is observed that MobileNet takes the least amount of time to train while 
+  ResNet converges the fastest. Also, EfficientNet performs the best most of the 
+  times on Chest X-ray scans. An F1 score of 0.8 for the pneumonia dataset was obtained, 
+  0.98 for the COVID-19 dataset and 0.46 for the multilabel chest X-ray 8 dataset.
+  Finally, models are visualized using t-SNE and gradCAM to understand the features 
+  learned by the models and correlate them with the actual effect of the diseases on the 
+  lungs.
 \end{abstract}
 
 %%%%%%%%% BODY TEXT
@@ -110,7 +109,7 @@ haven't been able to come up with models that can replace radiologists. Small
 specifications of X-ray scanners leading to low inter-hospital accuracy \cite{melissarohman2018}
 are the biggest problems that 
 researchers have faced. Another issue with using deep neural networks in medical settings is 
-its black-box nature\cite{paulblazek2022}, doctors and patients will not trust a model that 
+its black-box nature, doctors and patients will not trust a model that 
 cannot explain its results\cite{aleksandra2019}. 
 
 This project is an attempt to compare three CNN backbone architectures namely, ResNet-34, 
@@ -130,16 +129,18 @@ the Adam optimizer \cite{kingma2014adam} with default parameters and the cosine 
 learning rate scheduler was used to decrease the learning rate as training progressed.
 Further, an ablation study was performed to find the best learning rate for the selected model.
 Finally, GradCAM \cite{jacobgilpytorchcam} and T-SNE were used to visualize the trained models and understand 
-model predictions better. An F1 score of 0.8 and 0.98 was achieved for the two multiclass
+model predictions better. This would help shed light on the black box nature of the models 
+and allow subject matter experts to trust the predictions better. 
+An F1 score of 0.8 and 0.98 was achieved for the two multiclass
 datasets, whereas the maximum F1 for the multilabel dataset with 7 classes was 0.46.
 
 \textbf{Related Works:} 
 Li \etal \cite{li2014medical} were among the first
 to use CNNs in a medical setting. They used a single convolutional layer to classify 
-interstitial lung diseases using CT scans, achieving better performance than existing 
-approaches. Since then there has been a dramtic increase in application of CNNs 
-in healthcare, deep neural networks have been used to perform various tasks like 
-segmenting regions of interest in MRI \cite{kayalibay2017cnn,dolz2018hyperdense}, classifying X-Ray  
+interstitial lung diseases using CT scans, achieving better performance than existing state of 
+the art approaches. Since then there has been a dramtic increase in application of CNNs 
+in the healthcare setting, deep neural networks have been used to perform various tasks like 
+segmenting regions of interest in MRI scans \cite{kayalibay2017cnn,dolz2018hyperdense}, classifying X-Ray   
 \cite{rajpurkar2017chexnet}, MRI \cite{farooq2017deep}, and CT \cite{alakwaa2017lung} scans.
 Further, GANs have been used to generate high quality scans \cite{loey2020within} 
 when there is a lack of available data due to either privacy reasons or availability of subjects. 
@@ -148,7 +149,9 @@ GANs have also been used to generate high quality CT scans from MRI scans
 deep CNNs have also been used to detect malarial parasite in blood smear images 
 \cite{umer2020novel} with an accuracy of 99.96\%. Another interesting 
 application is the use of 1-D convolutions to detect heart anomalies using ECG data
-\cite{kiranyaz2015real}. Researchers have also used architectures like the Inception V3 to perform 
+\cite{kiranyaz2015real} collected using smartwatches. These models can be trained once for 
+a patient and used to give radiologist level prediction on the go. 
+Researchers have also used architectures like the Inception V3 to perform 
 dermatologist level skin-cancer detection using skin lesion images \cite{esteva2017dermatologist} using transfer 
 learning.  
 
@@ -200,7 +203,8 @@ In the following sections methodology of the approach and the results will be di
 \end{table}
 
 \textbf{Datasets:} (\cref{tab:selDataset}) with varying disease types were chosen to ensure 
-model robustness. Other criteria included the \textit{number of images per class} and 
+model robustness and to get results across a set of different diseases. 
+Other criteria included the \textit{number of images per class} and 
 \textit{image quality} as noisy scans can lead to mis-diagnosis\cite{sivakumar2012computed}. 
 
 \begin{figure}
@@ -236,19 +240,21 @@ show bilateral patchy areas of consolidation are classified as viral pneumonia
 homogeneous inflammatory reaction causing mucus and cellular debris. Normal scans here as well 
 produce a clear view of the lungs. 
 
-NIH \cite{chestxray2017data} released over 100k anonymized chest X-ray images along with 
+NIH released over 100k anonymized chest X-ray images along with 
 their radiological reports from over 30k patients. Wang \etal \cite{wang2017chestx} 
 used this data to create the \textbf{Chest X-ray 8} dataset by generating disease labels 
-through NLP fromt he radiological reports. \cite{kaggle8} The dataset contains 15 classes but only 
+through NLP from the radiological reports. \cite{kaggle8} The dataset contains 15 classes but only 
 7 \cref{fig:sample_imgs} were chosen for this study. This dataset is significantly different from the 
-other two as it is a multilabel dataset. Classes were iteratively removed, ensuring that
-they are not highly imbalanced to finally reach the 7 classes. With over 29,000 images of size 
+other two as it is a multilabel dataset, thus the same image can be labelled as two different 
+classes. Classes were iteratively removed, ensuring that they are not highly imbalanced to finally 
+reach the 7 classes. With over 29,000 images of size 
 1024 x 1024, this dataset was the biggest and thus had to be resized down to 384 x 384 to 
 reduce training and processing times. Furthermore, normal class images were undersampled by first
-choosing one scan per patient and then selecting 7000 scans out of this subset randomly. 
+choosing one scan per patient and then selecting 7,000 scans out of this subset randomly. 
 The data consists of multiple scans from the same subject which could lead to data leakage between 
 the train, val and test sets if a random train-test-val split was performed. 
-This was prevented with the use of GroupShuffleSplit from the scikit library. 
+This was prevented with the use of GroupShuffleSplit from the scikit library to keep scans from the 
+same patient in the same split. 
 
 \begin{figure}[t]
   \centering
@@ -264,7 +270,7 @@ F1 score by about 4\% for the chest X-ray classification task. Visually, the con
 and allowed irregularities to stand out as shown in \cref{fig:pre_proc_img}. Next, the 
 scans were divided into train, validation and test with the 70:15:15 split. 
 During training, the scans were augmented using RandomAdjustSharpness and 
-RandomAutocontrast in Pytorch \cite{transforms} to increase the number of images the 
+RandomAutocontrast in Pytorch to increase the number of images the 
 model gets to learn from and ensure that the model is robust to scans from different machines.
 RandomHorizontalFlip was also used to make the models invarient to the direction of the scan as 
 some scans were anterior-posterior while others were posterior-anterior \cite{botev2022regularising}.
@@ -361,9 +367,9 @@ to calculate the F1 score at each step of training. While calculating the F1 sco
 was used to get an average score across classes. All images were normalized before getting trained 
 with the mean and standard deviation of the training set of each of the selected datasets.
 
-Initial runs of the multilabel data training produced 0 F1 score due to the highly imbalanced 
-nature of multilabel classes. To mitigate this, class wise weights were calculated using the training 
-data and used with the loss function. This improved the F1 score considerably. 
+Initial training runs of the multilabel data produced a zero F1 score due to its highly imbalanced 
+nature. To mitigate this, class wise weights were calculated and used with the loss function. 
+This improved the F1 score considerably. 
 
 \begin{table*}[tbh]
   \centering
@@ -445,7 +451,7 @@ would take the same amount of time for all the models.
   \subfloat[MobileNet]{\includegraphics[width = 0.5\linewidth]{tsne_pneumonia_mobilenet.eps}}\\
   \subfloat[EfficientNet]{\includegraphics[width = 0.5\linewidth]{tsne_pneumonia_efficientnet.eps}}
   \subfloat[EN - Transfer Learning]{\includegraphics[width = 0.5\linewidth]{tsne_pneumonia_efficientnet_tl.eps}}
-  \caption{T-SNE and Confusion matrics for the test set of the Pneumonia dataset.}
+  \caption{T-SNE and Confusion matrices for the test set of the Pneumonia dataset.}
   \label{fig:tsne_pneumonia}
 \end{figure}
 
@@ -462,7 +468,7 @@ the confusion matrix where the transfer learning and MobileNet models perform th
   \subfloat[MobileNet]{\includegraphics[width = 0.5\linewidth]{tsne_covid_pneumonia_mobilenetnet.eps}}\\
   \subfloat[EfficientNet]{\includegraphics[width = 0.5\linewidth]{tsne_covid_pneumonia_efficientnet.eps}}
   \subfloat[EN - Transfer Learning]{\includegraphics[width = 0.5\linewidth]{tsne_covid_pneumonia_efficientnet_tl.eps}}
-  \caption{T-SNE and Confusion matrics for the test set of the COVID dataset.}
+  \caption{T-SNE and Confusion matrices for the test set of the COVID dataset.}
   \label{fig:tsne_covid}
 \end{figure}
 
