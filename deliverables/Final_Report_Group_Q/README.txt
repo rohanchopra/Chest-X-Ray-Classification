@@ -1,0 +1,2 @@
+1) The link to out GitHub page is as follows: https://github.com/rohanchopra/COMP6721_Group_Q
+2) The download link for the video presentation is as follows: https://drive.google.com/file/d/1vFk_WmE5fbnKZ6IV2imB8gwl8AIwn5O-/view?usp=sharing

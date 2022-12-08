@@ -123,9 +123,9 @@ using transfer learning. Transfer learning was performed by deep-tuning ImageNet
 weights and the performance was evaluated to check improvement over the models trained from scratch. 
 The small dataset problem and the issue of different radiographic contrast \cite{andrew2022rad} 
 is mitigated using data augmentation. Imbalanced data problem is handled by undersampling the 
-majority class. The hyperparameters were fixed across models and the F1 scores and cross entropy loss 
-have been used to compare models and select the best overall model. All the models were optimized using 
-the Adam optimizer \cite{kingma2014adam} with default parameters and the cosine annealing \cite{loshchilov2016sgdr} 
+majority class. The hyperparameters were fixed across models and the F1 scores, cross entropy loss 
+was used to compare models and select the best overall model. All the models were optimized using 
+the Adam optimizer \cite{kingma2014adam} with default parameters. The cosine annealing \cite{loshchilov2016sgdr} 
 learning rate scheduler was used to decrease the learning rate as training progressed.
 Further, an ablation study was performed to find the best learning rate for the selected model.
 Finally, GradCAM \cite{jacobgilpytorchcam} and T-SNE were used to visualize the trained models and understand 
@@ -138,19 +138,19 @@ datasets, whereas the maximum F1 for the multilabel dataset with 7 classes was 0
 Li \etal \cite{li2014medical} were among the first
 to use CNNs in a medical setting. They used a single convolutional layer to classify 
 interstitial lung diseases using CT scans, achieving better performance than existing state of 
-the art approaches. Since then there has been a dramtic increase in application of CNNs 
+the art approaches. Since then there has been a dramatic increase in application of CNNs 
 in the healthcare setting, deep neural networks have been used to perform various tasks like 
 segmenting regions of interest in MRI scans \cite{kayalibay2017cnn,dolz2018hyperdense}, classifying X-Ray   
 \cite{rajpurkar2017chexnet}, MRI \cite{farooq2017deep}, and CT \cite{alakwaa2017lung} scans.
 Further, GANs have been used to generate high quality scans \cite{loey2020within} 
-when there is a lack of available data due to either privacy reasons or availability of subjects. 
+when there is a lack of available data due to either privacy reasons or unavailability of subjects. 
 GANs have also been used to generate high quality CT scans from MRI scans 
 \cite{liu2021ct}. Apart from radiographic scans,
 deep CNNs have also been used to detect malarial parasite in blood smear images 
 \cite{umer2020novel} with an accuracy of 99.96\%. Another interesting 
 application is the use of 1-D convolutions to detect heart anomalies using ECG data
 \cite{kiranyaz2015real} collected using smartwatches. These models can be trained once for 
-a patient and used to give radiologist level prediction on the go. 
+a patient and can be used to give radiologist level prediction on the go. 
 Researchers have also used architectures like the Inception V3 to perform 
 dermatologist level skin-cancer detection using skin lesion images \cite{esteva2017dermatologist} using transfer 
 learning.  
@@ -244,7 +244,7 @@ NIH released over 100k anonymized chest X-ray images along with
 their radiological reports from over 30k patients. Wang \etal \cite{wang2017chestx} 
 used this data to create the \textbf{Chest X-ray 8} dataset by generating disease labels 
 through NLP from the radiological reports. \cite{kaggle8} The dataset contains 15 classes but only 
-7 \cref{fig:sample_imgs} were chosen for this study. This dataset is significantly different from the 
+7 (\cref{fig:sample_imgs}) were chosen for this study. This dataset is significantly different from the 
 other two as it is a multilabel dataset, thus the same image can be labelled as two different 
 classes. Classes were iteratively removed, ensuring that they are not highly imbalanced to finally 
 reach the 7 classes. With over 29,000 images of size 
@@ -335,7 +335,7 @@ m_{t} = \beta_{1} \cdot m_{t-1} + (1 - \beta_{1}) \cdot g_{t}
   v_{t} = \beta_{2} \cdot v_{t-1} + (1 - \beta_{2}) \cdot g_{t}^{2}
   \label{eq:adam2}
   \end{equation}
-Further, Cosine annealing \cite{loshchilov2016sgdr} learning rate scheduler was used 
+Further, the Cosine annealing \cite{loshchilov2016sgdr} learning rate scheduler was used 
 to reduce the learning rate as the training progressed down to a low of 0.001. 
 
 \section{Results} 
@@ -361,7 +361,7 @@ performing deep-tuning was that the Imagenet data is very different from chest X
 thus the model would need to learn features from X-ray scans. 
 
 The batch size was fixed to 32 for all the models. 
-While training the best model by validation loss was saved to prevent the usage of overfit 
+While training, the best model by validation loss was saved to prevent the usage of overfit 
 models for test set analysis. The actual and predicted results from each epoch was also stored 
 to calculate the F1 score at each step of training. While calculating the F1 score, macro averaging 
 was used to get an average score across classes. All images were normalized before getting trained 
@@ -420,7 +420,7 @@ architecture to a bigger architecture, makes the model start to overfit earlier.
 The MobileNet model was the most unstable among the three and also took more epochs to reach 
 the minima. The EfficientNet algorithm performs best for the COVID and Chest X-ray 8 
 dataset and all three architectures performed similar for the pneumonia dataset. 
-This shows that the compound scaline of EfficientNet gives good results for chest X-ray data.
+This shows that the compound scaling of EfficientNet gives good results for chest X-ray data.
 The X-ray 8 dataset performed the worst among the three datasets which could be due to the 
 high number of classes, class imbalance and the multilabel nature of the problem. 
 Surprisingly, the pneumonia dataset performed worse than the COVID + pneumonia dataset 
@@ -489,10 +489,10 @@ matrix as well.
 \end{figure}
 
 \cref{fig:gradcam_pneumonia} shows the gradCAM visualization of the last layer of the convolutional network.
-Here it can be seen that the ResNet is learning completely different features as compared to the other 
+Here it can be seen that ResNet is learning completely different features as compared to the other 
 models. This could be the reason for its low performance. In case of bacterial pneumonia, the network identifies 
 affected area on the right side of the scan. On the other hand, in case of viral pneumonia, models look at both 
-sides of the lungs. This correlates with the actual progrssion of these diseases as given in \cref{sec:prop_method}.
+sides of the lungs. This correlates with the actual progression of these diseases as given in \cref{sec:prop_method}.
 
 
 
@@ -504,9 +504,9 @@ sides of the lungs. This correlates with the actual progrssion of these diseases
   \label{fig:gradcam_covid}
 \end{figure}
 
-\cref{fig:gradcam_covid} shows that MobileNet activates the entire image incase of COVID, this be the 
+\cref{fig:gradcam_covid} shows that MobileNet activates the entire image incase of COVID, this could be the 
 reason for its low performance. In case of pneumonia, the EfficientNet models identifies 
-affected areas on the bootom of the lungs. On the other hand, in case of COVID, the models look at a bigger 
+affected areas on the bottom of the lungs. On the other hand, in case of COVID, the models look at a bigger 
 region of the lungs. This correlates with how these diseases impact the lungs as given in \cref{sec:prop_method}.
 
 
@@ -537,9 +537,9 @@ better on the loss plot.
    \label{fig:ablation}
 \end{figure}
 From \cref{fig:ablation} it can be seen that the best performing learning rate is 0.001 
-on the F1 score of the test set with 0.005, 0.01 close second and 0.05, 0.1 performing the worst.
+on the F1 score of the test set with 0.005, 0.01 close seconds and 0.05, 0.1 performing the worst.
 This matches the results of the validation set on \cref{fig:ablation_plot}. Thus, a learning rate of 
-0.001 performs the best on the COVID dataset with the transfer learning EfficientNet model.
+0.001 performs the best on the COVID dataset with the transfer learning model.
 
 
 %%%%%%%%% REFERENCES
