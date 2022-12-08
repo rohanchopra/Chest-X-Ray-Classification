@@ -92,7 +92,7 @@ Abhishek Handa\\
 \end{abstract}
 
 %%%%%%%%% BODY TEXT
-\section{Introduction-1.5}
+\section{Introduction}
 \label{sec:intro}
 
 Early diagnosis of respiratory diseases like pneumonia and COVID-19 leads to decreased mortality 
@@ -176,7 +176,7 @@ In the following sections methodology of the approach and the results will be di
 
 
 %-------------------------------------------------------------------------
-\section{Methodology-2}
+\section{Methodology}
 \label{sec:prop_method}
 
 
@@ -214,7 +214,7 @@ model robustness. Other criteria included the \textit{number of images per class
 The \textbf{COVID} dataset was created by a team of researchers from Qatar University, Doha, 
 Qatar, and the University of Dhaka, Bangladesh along with collaborators from Pakistan 
 and Malaysia in collaboration with medical doctors from the Italian Society of Medical 
-and Interventional Radiology database using 43 \cite{covidpneumonia2020data} different 
+and Interventional Radiology database using 43 different 
 publications \cite{RAHMAN2021104319,9144185,kagglecovid}. It is a multiclass data with 
 three classes, COVID, viral pneumonia and normal. X-rays with widespread, hazy, 
 and irregular ground glass opacities are of the COVID-19 class \cite{jacobi2020portable}. 
@@ -264,7 +264,7 @@ F1 score by about 4\% for the chest X-ray classification task. Visually, the con
 and allowed irregularities to stand out as shown in \cref{fig:pre_proc_img}. Next, the 
 scans were divided into train, validation and test with the 70:15:15 split. 
 During training, the scans were augmented using RandomAdjustSharpness and 
-RandomAutocontrast \cite{nanni2021comparison} in Pytorch \cite{transforms} to increase the number of images the 
+RandomAutocontrast in Pytorch \cite{transforms} to increase the number of images the 
 model gets to learn from and ensure that the model is robust to scans from different machines.
 RandomHorizontalFlip was also used to make the models invarient to the direction of the scan as 
 some scans were anterior-posterior while others were posterior-anterior \cite{botev2022regularising}.
@@ -300,9 +300,9 @@ the accuracy much. This architecture had the highest trainable parameters and FL
 Imagenet accuracy.
 \cite{he2016deep}
 
-\textbf{MobileNet V3 Large} uses depthwise separable convolution from MobileNet V2 
-\cite{sandler2018mobilenetv2} along with squeeze-excitation blocks in residual layers 
-from MnasNet \cite{tan2019mnasnet}. This makes it really quick to train while still performing 
+\textbf{MobileNet V3 Large} uses depthwise separable convolution from MobileNet V2 along with 
+squeeze-excitation blocks in residual layers 
+from MnasNet. This makes it really quick to train while still performing 
 at par with other architectures. This architecture had the lowest trainable parameters and FLOPS 
 among the three selected. Howard \etal \cite{howard2019searching} also used 
 network architecture search to find the most effective model. The large configuration 
@@ -332,7 +332,7 @@ m_{t} = \beta_{1} \cdot m_{t-1} + (1 - \beta_{1}) \cdot g_{t}
 Further, Cosine annealing \cite{loshchilov2016sgdr} learning rate scheduler was used 
 to reduce the learning rate as the training progressed down to a low of 0.001. 
 
-\section{Results-2.5} 
+\section{Results} 
 \label{sec:result}
 \textbf{Experiment Setup:}
 
@@ -354,6 +354,7 @@ with the IMAGENET1K\_V2 weights but the entire model was fine-tuned. The rationa
 performing deep-tuning was that the Imagenet data is very different from chest X-ray scans 
 thus the model would need to learn features from X-ray scans. 
 
+The batch size was fixed to 32 for all the models. 
 While training the best model by validation loss was saved to prevent the usage of overfit 
 models for test set analysis. The actual and predicted results from each epoch was also stored 
 to calculate the F1 score at each step of training. While calculating the F1 score, macro averaging 
@@ -375,7 +376,8 @@ data and used with the loss function. This improved the F1 score considerably.
    \hline
   \emph{Pneumonia}           & 0.784 & 82 &  \textbf{22} &   \textbf{0.804} & \textbf{75} &  42 &   0.768 & 110 &  44 &   0.782 & 114 &  70  \\
   \hline
-  \emph{COVID}        & 0.967 & 68 & 71 & 0.959 & \textbf{45} & 82 & \textbf{0.979} & 80 & 89 & 0.978 & 56 & \textbf{46}   \\ % \hdashline
+  \emph{COVID}        & 0.959 & 50 & \textbf{21} & 0.967 & \textbf{37} & 44 & \textbf{0.979} & 56 & 46 & 0.978 & 56 & 43   \\ % \hdashline
+
   \hline
   \emph{X-Ray 8} &   0.411 & 11,502 & \textbf{19} & 0.406 & \textbf{7,275} & 42 & 0.445 & 13,820 & 31 & \textbf{0.457} & 13,813 & 29   \\ \hline
   \end{tabular}
@@ -426,10 +428,10 @@ and could not catch up to the transfer learning model even after 100 epochs in t
 Finally, looking at \cref{table:test_metrics} it can be seen that the MobileNet architecture was 
 the fastest to train per epoch. It consistantly took less time per epoch but, if number of 
 epochs required to converge is considered, it does not train the fastest all the time.
-It is also evident that ResNet converged the fastest with the exception of the COVID dataset where the 
-transfer learning EfficientNet converged the fastest. EfficientNet performs the best in terms of the 
-overall F1 score on the test set with the exception of the Pneumonia dataset where surprisingly 
-MobileNet performed the best. The transfer learning models converged much quicker 
+It is also evident that ResNet converged the fastest at half the number of epochs compared with other models. 
+EfficientNet models perform the best in terms of the overall F1 score on the test set with the exception of 
+the Pneumonia dataset where surprisingly 
+MobileNet performed the best. The transfer learning models converged quicker 
 than the other models with the exception of the Pneumonia dataset. Another surprising observation 
 is that the EfficientNet model takes the longest to train per epoch even though the number of trainable 
 parameters is nowhere close to ResNet. Also, MobileNet isn't as fast to train as expected when 
@@ -470,17 +472,6 @@ clusters could indicate other factors of the disease, for example the severity a
 by the disease. This performance of the transfer learning model can be confirmed by looking at the confusion 
 matrix as well.
 
-\begin{figure}
-  \subfloat[Resnet]{\includegraphics[width = 0.5\linewidth]{tsne_xray8_resnet.eps}}
-  \subfloat[MobileNet]{\includegraphics[width = 0.5\linewidth]{tsne_xray8_mobilenet.eps}}\\
-  \subfloat[EfficientNet]{\includegraphics[width = 0.5\linewidth]{tsne_xray8_efficientnet.eps}}
-  \subfloat[EN - Transfer Learning]{\includegraphics[width = 0.5\linewidth]{tsne_xray8_efficientnet_tl.eps}}
-  \caption{T-SNE and Confusion matrics of the Chest X-ray 8 dataset.}
-  \label{fig:tsne_xray8}
-\end{figure}
-
-The t-SNE plots for the Chest X-ray 8 dataset is quite different as it is a multi label. Thus, for each class 
-a plot is generated. 
 
 
 \begin{figure}
@@ -564,3 +555,16 @@ This matches the results of the validation set on \cref{fig:ablation_plot}. Thus
   \caption{Confusion matrics of the Chest X-ray 8 dataset.}
   \label{fig:cm_xray8}
 \end{figure}
+
+
+\begin{figure}
+  \subfloat[Resnet]{\includegraphics[width = 0.5\linewidth]{tsne_xray8_resnet.eps}}
+  \subfloat[MobileNet]{\includegraphics[width = 0.5\linewidth]{tsne_xray8_mobilenet.eps}}\\
+  \subfloat[EfficientNet]{\includegraphics[width = 0.5\linewidth]{tsne_xray8_efficientnet.eps}}
+  \subfloat[EN - Transfer Learning]{\includegraphics[width = 0.5\linewidth]{tsne_xray8_efficientnet_tl.eps}}
+  \caption{T-SNE and Confusion matrics of the Chest X-ray 8 dataset.}
+  \label{fig:tsne_xray8}
+\end{figure}
+
+The t-SNE plots for the Chest X-ray 8 dataset is quite different as it is a multi label. Thus, for each class 
+a different plot is generated. From \cref{fig:tsne_xray8} it can be seen that for the class Effusion, 
