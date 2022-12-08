@@ -37,13 +37,13 @@ pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1 --e
 ```
 
 ## Training and validating the models
-To train and validate the models, 
+To train and validate the models
 1. Create the conda environment
 2. Copy the data to the data folder
 3. Run the relevant script from the notebooks folder. For example to train the EfficientNet B1 model for the Chest X-ray 8 dataset, run the notebooks/xray8/Multilabel_Training_efficient_net_b1_100_epoch_32_batch.ipynb notebook.
 
 ## Running the pre-trained model on the sample dataset
-To train and validate the models, 
+To train and validate the models
 1. Create the conda environment
 2. Copy the sample data to the data folder
 3. Run the relevant script from the notebooks folder. For example to train the transfer learning EfficientNet B1 model for the Chest X-ray 8 dataset, run the notebooks/xray8/Multilabel_Training_efficient_net_b1_100_epoch_32_batch_transfer.ipynb notebook.
@@ -52,4 +52,4 @@ To train and validate the models,
 Not required. ALl dependencies are present in the environment file.
 
 ## Dataset
-A sample of the dataset can be downloaded from the following [link]().
+A sample of the dataset can be downloaded from the following [link](https://drive.google.com/file/d/1OpvSkIDzOlJUSCLJ-wfXSVsBbfhntun4/view?usp=sharing).
